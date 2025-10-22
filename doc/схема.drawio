@@ -1,0 +1,138 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" version="28.2.7">
+  <diagram name="Страница — 1" id="bGo87sy_NIAcCg5xL4is">
+    <mxGraphModel dx="2211" dy="2053" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="boItzw7_etXdH4VOtd6Z-24" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="-60" y="100" width="850" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-27" target="boItzw7_etXdH4VOtd6Z-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-26" value="Key" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-25">
+          <mxGeometry x="0.0105" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-27" value="ESP32-S3" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="130" width="120" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-28" value="Датчик температуры, атм.давления&lt;br&gt;&lt;br&gt;&lt;div&gt;BME280&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-50" y="130" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-29" value="АКБ 12V&lt;br&gt;LiFePO4&lt;div&gt;&lt;br&gt;емкость не менее 10 А.ч&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="560" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-34" target="boItzw7_etXdH4VOtd6Z-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-31" value="5V" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-30">
+          <mxGeometry x="0.4333" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-34" target="boItzw7_etXdH4VOtd6Z-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-33" value="12V" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-32">
+          <mxGeometry x="0.248" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-34" value="DC-DC 12-5В" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-30" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-39" target="boItzw7_etXdH4VOtd6Z-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-36" value="2.4V" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-35">
+          <mxGeometry x="-0.15" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-47" value="3.6 V 2А" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-35">
+          <mxGeometry x="-0.1067" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-39" target="boItzw7_etXdH4VOtd6Z-29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="210" />
+              <mxPoint x="440" y="210" />
+              <mxPoint x="440" y="385" />
+              <mxPoint x="350" y="385" />
+              <mxPoint x="350" y="480" />
+              <mxPoint x="80" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-38" value="12V" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-37">
+          <mxGeometry x="-0.2809" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-39" value="транзисторный каскад" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-40" value="SIM800l&lt;br&gt;&lt;br&gt;модуль связи" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-41" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.radio.aerial_-_antenna_2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="79" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-42" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;edgeStyle=orthogonalEdgeStyle;shape=link;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-40" target="boItzw7_etXdH4VOtd6Z-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.017;entryY=0.45;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-28" target="boItzw7_etXdH4VOtd6Z-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-44" value="I2C" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-43">
+          <mxGeometry x="0.1116" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-49" value="DC-DC" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="220" width="70" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-50">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-52" value="I2C" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-51">
+          <mxGeometry x="-0.5091" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-50" value="Датчик точного времени&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(7, 7, 7); font-family: Onest, arial, sans-serif; font-size: 16px; text-align: start; background-color: rgb(255, 255, 255);&quot;&gt;DS3231&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-50" y="260" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-54" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="155" y="-170" width="205" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="boItzw7_etXdH4VOtd6Z-55" target="boItzw7_etXdH4VOtd6Z-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-57" value="I2C" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="boItzw7_etXdH4VOtd6Z-56">
+          <mxGeometry x="-0.2857" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-55" value="Датчик давления воды" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="-140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-58" value="Под водой гермокорпус" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="-90" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-59" value="На суше гермокорпус" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="660" y="120" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="boItzw7_etXdH4VOtd6Z-60" value="антенну желательно вывести повыше на дерево, замаскировать" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="890" y="70" width="90" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
