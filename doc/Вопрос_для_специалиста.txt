@@ -1,0 +1,34 @@
+Устройство будет изготовлено на макетной плате THT-монтажем.
+Состоит из платы с компонентами и одного датчика который будет лежать на дне реки.
+Монтажэная плата в герментичном корпусе на берегу.
+Устройство раз в 3 часа пробужатеся из глубогкого сна, отправляет в GPRS состояние датчикомв и время и уходи  в сон.
+АКБ планируется взять морозостойкий LiFePO4 достоачный на год автономной работы или более.
+Антенна будет выведена наружу корпуса через внешний разъем.
+По сути это несколько готовых микросхем спаяных как единое устройство, я так пнимаю что  никакие особенно доп. резисторы и емкости не потребутся?
+Но по управлению питанием см. п.6 придется кое что сделать и это больше всего вызывает вопросов. Нужно 2 схемки как описано вв п.6. для каждого собрать как я понял.
+
+1) ESP32 контроллер 
+https://www.ozon.ru/product/modul-plata-esp32-s3-devkitc-1-type-c-1956181506/
+
+2) Аналоговый датчик уровня
+https://www.ozon.ru/product/datchik-urovnya-yb2jf-kabel-5m-12-32v-dc-420ma-0-10m-2728550154/
+
+3) Датчик атм. давления и температуры
+https://www.ozon.ru/product/bme280-5v-modul-datchika-atmosfernogo-davleniya-temperatury-i-vlazhnosti-1568410177/
+
+4) Модуль связи
+https://www.ozon.ru/product/modul-gsm-gprs-sim800l-s-antennoy-933031795/
+
+5) Часы
+https://www.ozon.ru/product/avtonomnyy-modul-chasov-realnogo-vremeni-ds3231-s-batareykoy-2070627566/
+
+6) Обвязка для подключения питания к модулю связи, к датчику глубины в приложеном документе (на датчик 12В питание, на моудль связи 4В)
+
+7) Преобразователи напряжения DC-DC 12В - 5В, 12В - 4В
+    https://www.ozon.ru/product/ponizhayushchiy-preobrazovatel-napryazheniya-gsmin-mp1584en-dc-dc-zelenyy-1412428185/?at=z6tO6k9ylc4V0153uo81mPkT1J7K9vhPOrjEkuRAgWLP
+
+    либо
+    
+    https://www.ozon.ru/product/ponizhayushchiy-reguliruemyy-preobrazovatel-vhod-3-2-v-40-v-vyhod-1-25-35-v-dc-dc-lm2596s-1117783630/?at=57twEX4zmc5pERmTrWVVLBF6KkB3NTzn37M0IL4gn39
+
+    
