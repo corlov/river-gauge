@@ -171,5 +171,4 @@ void goToSleep() {
 }
 
 void loop() {
-  // Не используется
 }

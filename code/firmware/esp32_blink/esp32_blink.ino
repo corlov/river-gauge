@@ -12,42 +12,69 @@ void setup() {
   // Для ESP32 рекомендуется использовать скорость выше, чем 9600
   Serial.begin(115200);
 
-  // Инициализируем шину I2C. Для ESP32-S3 можно не указывать пины,
-  // если используются стандартные (SDA=21, SCL=22)
-  Wire.begin();
 
-  // Инициализируем датчик BH1750
-  // По умолчанию используется режим непрерывного измерения с высоким разрешением
-  if (lightMeter.begin()) {
-    Serial.println(F("init ok"));
-  } else {
-    Serial.println(F("Error"));
-    // Бесконечный цикл, если датчик не найден
-    while (1) {}
-  }
 
   pinMode(ledPin, OUTPUT);
 }
 
 void loop() {
-  // Считываем уровень освещенности в люксах (лк)
-  float lux = lightMeter.readLightLevel();
-
-  // Выводим показания в монитор порта (консоль)
-  Serial.print("Lightness: ");
-  Serial.print(lux);
-  Serial.println(" lux");
-
-  // Ждем 1 секунду перед следующим измерением
-  delay(1000);
-
   digitalWrite(ledPin, HIGH);   // Включаем светодиод (HIGH - высокий уровень напряжения)
   Serial.println("LED ON");
-  delay(200);                  // Ждем одну секунду (1000 миллисекунд)
+  delay(2000);                  // Ждем одну секунду (1000 миллисекунд)
   digitalWrite(ledPin, LOW);    // Выключаем светодиод (LOW - низкий уровень напряжения)
   Serial.println("LED OFF");
-  delay(200);  
+  delay(12000);  
+
+  Serial.println("--- Pin Definitions ---");
+  Serial.print("A0 is GPIO: ");
+  Serial.println(A0);
+
+  Serial.print("A1 is GPIO: ");
+  Serial.println(A1);
+
+  Serial.print("LED_BUILTIN is GPIO: ");
+  Serial.println(LED_BUILTIN);
+  Serial.println("---------------------");
+
+
+  Serial.println("\n--- Карта пинов для вашей платы ESP32-S3 ---");
+
+  // --- Аналоговые пины (псевдонимы для GPIO) ---
+  Serial.println("\n--- Аналоговые пины (ADC1) ---");
+  Serial.print("A0 = GPIO "); Serial.println(A0);
+  Serial.print("A1 = GPIO "); Serial.println(A1);
+  Serial.print("A2 = GPIO "); Serial.println(A2);
+  Serial.print("A3 = GPIO "); Serial.println(A3);
+  Serial.print("A4 = GPIO "); Serial.println(A4);
+  // На ESP32-S3 аналоговых пинов гораздо больше,
+  // но это самые стандартные "Arduino-совместимые" имена.
+
+  // --- Встроенные устройства ---
+  Serial.println("\n--- Встроенные устройства ---");
+  Serial.print("LED_BUILTIN = "); Serial.println(LED_BUILTIN);
+  if (LED_BUILTIN > 60) {
+    Serial.println(" (Это 'виртуальный' пин для RGB светодиода)");
+  }
+
+  // --- Стандартные интерфейсы ---
+  Serial.println("\n--- Аппаратный I2C (Wire) ---");
+  Serial.print("SDA = GPIO "); Serial.println(SDA);
+  Serial.print("SCL = GPIO "); Serial.println(SCL);
+
+  Serial.println("\n--- Аппаратный SPI ---");
+  Serial.print("MOSI = GPIO "); Serial.println(MOSI);
+  Serial.print("MISO = GPIO "); Serial.println(MISO);
+  Serial.print("SCK = GPIO "); Serial.println(SCK);
+  Serial.print("SS (CS) = GPIO "); Serial.println(SS);
+
+  // --- Стандартные пины для Serial (UART0) ---
+  Serial.println("\n--- Аппаратный Serial (UART0) ---");
+  Serial.print("TX = GPIO "); Serial.println(TX);
+  Serial.print("RX = GPIO "); Serial.println(RX);
+
+  Serial.println("\n------------------------------------------");
 }
+
 
 
 
