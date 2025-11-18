@@ -73,14 +73,15 @@ float getActualWaterLevel() {
   float medianRawValue = wl_measure_samples[8];
 
   // --- Шаг 4: Преобразуем медианное значение в напряжение ---
-  float voltage = (medianRawValue / 1023.0) * V_REF;
+  float voltage = (medianRawValue / 4095.0) * V_REF; // для ПроМикро тут 1023 т.к.10битный у них АЦП
 
   // --- Шаг 5: Преобразуем напряжение в ток (в миллиамперах) ---
   float current_mA = (voltage / WATER_LEVEL_SHUNT_RESISTOR_VALUE) * 1000.0;
 
   // --- Шаг 6: Преобразуем ток в уровень воды (в метрах) ---
-  float useful_current = current_mA - 4.0;
-  const float current_range = 16.0;
+  // описывает физический стандарт 4-20 мА датчика, а не способ измерения
+  float useful_current = current_mA - 4.0; // При 0% измеряемой величины (минимальный уровень воды) он физически выдает ток 4 мА
+  const float current_range = 16.0; // (20.0 - 4.0)
   float waterLevel = (useful_current / current_range) * WATER_LEVEL_SENSOR_RANGE_METERS;
 
   if (waterLevel < 0) {
@@ -124,11 +125,12 @@ float readBatteryVoltage() {
 
   // 5. Конвертируем значение АЦП обратно в напряжение
   // Сначала находим напряжение на пине A0
-  float dividerVoltage = adcValue * (5.0 / 1023.0);
+  //float dividerVoltage = adcValue * (5.0 / 1023.0);
+  float dividerVoltage = adcValue * (V_REF / 4095.0);
 
   // Затем, зная напряжение на делителе, вычисляем исходное напряжение аккумулятора
   // Формула: V_in = V_out * (R1 + R2) / R2
-  float batteryVoltage = dividerVoltage * (R1 + R2) / R2;
+  float batteryVoltage = dividerVoltage * (VOLTAGE_DIVIDER_UP_RESISTOR + VOLTAGE_DIVIDER_DOWN_RESISTOR) / VOLTAGE_DIVIDER_DOWN_RESISTOR;
 
   return batteryVoltage;
 }
