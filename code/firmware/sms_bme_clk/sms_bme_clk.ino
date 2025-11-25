@@ -2,7 +2,7 @@
 // Номер телефона для отправки SMS в международном формате
 #define SMS_TARGET "+79055191010"
 
-#define SLEEP_DURATION_SECONDS 120 // Время сна в секундах (1 минута)
+#define SLEEP_DURATION_SECONDS 20 // Время сна в секундах (1 минута)
 
 // --- ПИНЫ ---
 #define LED_PIN LED_BUILTIN
@@ -30,16 +30,21 @@ TinyGsm modem(SerialGSM);
 // Функция для мигания светодиодом
 void indicateWakeUp() {
   pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH);
+  
   delay(350);
   digitalWrite(LED_PIN, LOW);
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(1000);
 
   indicateWakeUp();
+
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
+
+  
   Serial.println("\nПроснулся!");
 
   // --- 1. Инициализация датчиков ---

@@ -19,6 +19,8 @@ String getBmeData() {
 void powerOff() {
     delay(1000);
     digitalWrite(DONE_PIN, HIGH);
+    delay(200);
+    digitalWrite(DONE_PIN, LOW);
 }
 
 
@@ -30,10 +32,12 @@ String getAlwaysOnSensorsData() {
 
     float temperatureFromRtcSensor = rtc.getTemperature();
 
-    float waterTemperature = getWaterTemperature();
+    float waterTemperature = 36.6;//getWaterTemperature();
 
     String data = String(timestamp) + "," + getBmeData() + "," + String(temperatureFromRtcSensor,1) + "," + String(waterTemperature, 1) + "," + String(DEVICE_ID);
-    data += String(GPS_LON, 7) + "," + String(GPS_LAT, 7) + "," + VERSION + "," + INSTALL_DATE;
+    data += "," + String(GPS_LON, 7) + "," + String(GPS_LAT, 7) + "," + VERSION + "," + INSTALL_DATE;
+
+    Serial.println(data);
 
     // TODO: дополнить в конце посылку этими данными
     // сколько секунд искалась связь
@@ -108,7 +112,7 @@ float getWaterTemperature() {
   // Проверяем, не вернул ли датчик ошибку
   // (значение -127 означает, что датчик не найден или неисправен)
   if (tempC == DEVICE_DISCONNECTED_C) {
-    Serial.println("E4");
+    Serial.println("E4: get water temperature error");
     delay(1000); // Ждем секунду перед новой попыткой
     return 65535;
   }
