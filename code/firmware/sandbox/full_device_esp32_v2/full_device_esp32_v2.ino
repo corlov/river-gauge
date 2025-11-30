@@ -6,6 +6,8 @@
 #include "sensors.h"
 #include "send_data.h"
 
+#define USE_PIXELS 0
+#define DEBUG_MODE 0
 
 
 int wl_measure_samples[SAMPLES_SIZE];

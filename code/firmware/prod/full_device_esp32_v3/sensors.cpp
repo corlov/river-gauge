@@ -20,6 +20,28 @@ String getBmeData() {
 }
 
 
+String getVoltData() {
+  float bus_voltage = ina219.getBusVoltage_V();
+  float current_mA = ina219.getCurrent_mA();
+  float power_mW = ina219.getPower_mW();
+
+  Serial.println("====================getVoltData");
+  // Serial.print("U: "); Serial.print(bus_voltage); Serial.print(" В, ");
+  // Serial.print("I: "); Serial.print(current_mA); Serial.print(" мА, ");
+  // Serial.print("P: "); Serial.print(power_mW); Serial.println(" мВт");
+
+  
+  Serial.printf("U: %.2f В, I: %.2f мА, P: %.2f мВт\n", bus_voltage, current_mA, power_mW);
+
+  String data = ",";
+  data += String(bus_voltage, 2) + ",";
+  data += String(current_mA, 2) + ",";
+  data += String(power_mW, 2);
+
+  return data;
+}
+
+
 void powerOff() {
     delay(1000);
     digitalWrite(DONE_PIN, HIGH);

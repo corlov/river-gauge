@@ -65,6 +65,8 @@ void indicationFail() {
 
 
 void initPins() {
+  pinMode(LED_PIN, OUTPUT);
+
   pinMode(MODEM_POWER_PIN, OUTPUT);
   digitalWrite(MODEM_POWER_PIN, LOW);
   delay(1000);
@@ -81,28 +83,54 @@ void initPins() {
 
 
 void initI2CSensors() {
-  Wire.begin();
   if (!rtc.begin()) {
     Serial.println("E1: RTC DS3231 is not found!");
   }
+
   if (!bme.begin(0x76)) {
     Serial.println("E2: BME280 is not found!");
   }
-  Serial.println("Sensors found [ok]");
+
+  if (!ina219.begin()) {
+    Serial.println("Не удалось найти INA219. Проверьте подключение!");
+  }
 
   // раскоментировать 1 раз если надо синхронизовать датчик со времененм на ПК
   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 
+void initAds() {
+  ads.begin();
+  // Усиление GAIN_TWO подходит для диапазона +/- 2.048V.
+  // Наш сигнал 0.4-2.0V идеально в него вписывается.
+  ads.setGain(GAIN_TWO);
+}
+
+
+// void init() {
+//   initPins();
+
+//   initAds();
+  
+//   Serial.begin(9600);
+
+//   indicateWakeUp();
+
+//   initI2CSensors();
+// }
+
+
 
 void init() {
   initPins();
-  
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   indicateWakeUp();
 
+  Wire.begin();
+  Serial.println("I2C шина запущена.");
+
+  initAds();
   initI2CSensors();
 }
-

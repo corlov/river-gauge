@@ -13,3 +13,11 @@ float getWaterTemperature();
 float getActualWaterLevel();
 
 void powerOff();
+
+void printProMicroData();
+
+String getDateTime();
+
+String getVoltData();
+
+

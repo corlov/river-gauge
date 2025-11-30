@@ -148,6 +148,17 @@ bool sendPayloadToServer(const String& payload) {
 }
 
 
+void modemOn() {
+  digitalWrite(MODEM_POWER_PIN, HIGH);
+  delay(2000);
+}
+
+
+void modemOff() {
+  digitalWrite(MODEM_POWER_PIN, LOW);
+  delay(2000);
+}
+
 // // --- Функция отправки: Принимает готовый пакет и отправляет его ---
 // // Возвращает true в случае успеха, false - в случае любой ошибки.
 // bool sendPayloadToServer(const String& payload) {

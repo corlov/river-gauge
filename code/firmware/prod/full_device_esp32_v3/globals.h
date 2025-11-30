@@ -7,9 +7,11 @@
 #include <Adafruit_BME280.h>
 #include <TinyGsmClient.h>
 #include <OneWire.h>
+#include <Wire.h>
 #include <DallasTemperature.h>
 #include <Preferences.h>
 #include <Adafruit_ADS1X15.h>
+#include <Adafruit_INA219.h>
 
 
 extern RTC_DS3231 rtc;
@@ -29,5 +31,7 @@ extern DallasTemperature sensors;
 extern Preferences preferences;
 
 extern Adafruit_ADS1115 ads;
+
+extern Adafruit_INA219 ina219;
 
 #endif

@@ -17,3 +17,7 @@ void powerOff();
 void printProMicroData();
 
 String getDateTime();
+
+String getVoltData();
+
+

@@ -4,30 +4,23 @@
 #include "water_lvl_types.h"
 
 
+
 void indicateWakeUp() {
   int i = 0;
-  while (i++ < 3) {
-    pixels.setPixelColor(0, CL_WHITE);
-    pixels.show();  
-    delay(200);
 
-    pixels.setPixelColor(0, CL_OFF);
-    pixels.show();  
+  while (i++ < 5) {
+    digitalWrite(LED_PIN, HIGH);  
+    delay(800);
+    digitalWrite(LED_PIN, LOW);
     delay(200);
   }
-  // pixels.setPixelColor(0, CL_BLUE);
-  // pixels.show();
-  // delay(200);
-  // pixels.setPixelColor(0, CL_OFF);
-  // pixels.show();  
-  // delay(200);
+
   Serial.println("Device is waked up\n");
 }
 
 
 void indicationInProgress() {
-  pixels.setPixelColor(0, CL_BLUE);
-  pixels.show();
+  digitalWrite(LED_PIN, HIGH);
   delay(1000);
 }
 
@@ -36,20 +29,21 @@ void indicationInProgress() {
 void indicationSuccess(int stage) {
   if (stage == 2) {
     int i = 0;
-    while (i < 10) {
-      pixels.setPixelColor(0, CL_PURPLE);
-      pixels.show();
-      delay(200);
-
-      pixels.setPixelColor(0, CL_GREEN);
-      pixels.show();  
-      delay(200);
+    while (i++ < 20) {
+      digitalWrite(LED_PIN, HIGH);
+      delay(100);
+      digitalWrite(LED_PIN, LOW);
+      delay(100);
     }
-    pixels.setPixelColor(0, CL_OFF);
   }
   else {
-    pixels.setPixelColor(0, CL_GREEN);
-    pixels.show();  
+    int i = 0;
+    while (i++ < 3) {
+      digitalWrite(LED_PIN, HIGH);
+      delay(1000);
+      digitalWrite(LED_PIN, LOW);
+      delay(1000);
+    }
     delay(4000);
   }
 }
@@ -57,8 +51,13 @@ void indicationSuccess(int stage) {
 
 
 void indicationFail() {
-  pixels.setPixelColor(0, CL_RED);
-  pixels.show();
+  int i = 0;
+  while (i++ < 3) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(3000);
+    digitalWrite(LED_PIN, LOW);
+    delay(500);
+  }
   delay(4000);
 }
 
@@ -66,8 +65,7 @@ void indicationFail() {
 
 
 void initPins() {
-  pixels.begin();
-  pixels.setBrightness(50);
+  pinMode(LED_PIN, OUTPUT);
 
   pinMode(MODEM_POWER_PIN, OUTPUT);
   digitalWrite(MODEM_POWER_PIN, LOW);
@@ -76,39 +74,63 @@ void initPins() {
   pinMode(DONE_PIN, OUTPUT);
   digitalWrite(DONE_PIN, LOW);
 
-
-  pinMode(RESET_MODEM_PIN, OUTPUT);
-  digitalWrite(RESET_MODEM_PIN, LOW);
-
+  // TODO: инициализировать неиспользуемые пины
   // for (int pin : unusedPins) {
   //   pinMode(pin, INPUT_PULLDOWN);
   // }
 }
 
 
+
 void initI2CSensors() {
-  Wire.begin();
   if (!rtc.begin()) {
     Serial.println("E1: RTC DS3231 is not found!");
   }
+
   if (!bme.begin(0x76)) {
     Serial.println("E2: BME280 is not found!");
   }
-  Serial.println("Sensors found [ok]");
+
+  if (!ina219.begin()) {
+    Serial.println("Не удалось найти INA219. Проверьте подключение!");
+  }
 
   // раскоментировать 1 раз если надо синхронизовать датчик со времененм на ПК
   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 
+void initAds() {
+  ads.begin();
+  // Усиление GAIN_TWO подходит для диапазона +/- 2.048V.
+  // Наш сигнал 0.4-2.0V идеально в него вписывается.
+  ads.setGain(GAIN_TWO);
+}
+
+
+// void init() {
+//   initPins();
+
+//   initAds();
+  
+//   Serial.begin(9600);
+
+//   indicateWakeUp();
+
+//   initI2CSensors();
+// }
+
+
 
 void init() {
   initPins();
-  
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   indicateWakeUp();
 
+  Wire.begin();
+  Serial.println("I2C шина запущена.");
+
+  initAds();
   initI2CSensors();
 }
-

@@ -16,15 +16,26 @@ const int receiver_server_port = 8001;
 // *********************************************
 // аппаратные настройки пинов
 // *********************************************
-#define NEOPIXEL_PIN 48
-#define MODEM_POWER_PIN 12
-#define MODEM_RX_PIN 15 //44
-#define MODEM_TX_PIN 16 //43
-#define DONE_PIN 2
-#define WATER_LEVEL_SENSOR_PIN A0
-#define BATTERY_VOLTAGE_PIN A1
-#define WATER_TEMPERATURE_SENSOR_PIN 5
-#define RESET_MODEM_PIN 1
+#define NEOPIXEL_PIN                    48
+
+#define LED_PIN LED_BUILTIN
+
+#define MODEM_POWER_PIN                 12
+#define MODEM_RX_PIN                    15
+#define MODEM_TX_PIN                    16
+#define DONE_PIN                        4
+
+#define WATER_LEVEL_SENSOR_PIN          14
+#define BATTERY_VOLTAGE_PIN             5
+
+#define WATER_TEMPERATURE_SENSOR_PIN    5
+//#define RESET_MODEM_PIN 14
+
+#define PRO_MICRO_ADDRESS 8 // Адрес нашего "Специалиста"
+
+
+
+// FIXME: скорректировать
 const int unusedPins[] = {0, 1, 2, 3, /*4, 5,*/ 6, 7, 8, 9, 10, 11,12,13,14,15,
                           16,17,18,19,20,21, 35,40,41,42,/*43,44,*/45,
                           46,47/*,48*/};
@@ -48,9 +59,21 @@ extern int wl_measure_samples[SAMPLES_SIZE];
 // *********************************************
 // Номиналы резисторов делителя напряжения
 // *********************************************
-const float VOLTAGE_DIVIDER_UP_RESISTOR = 33000.0; //17500.0;
-const float VOLTAGE_DIVIDER_DOWN_RESISTOR = 10000.0; //10000.0;
+const float VOLTAGE_DIVIDER_UP_RESISTOR = 40000.0; //33000 был но входное может быть больше лучше перестраховаться
+const float VOLTAGE_DIVIDER_DOWN_RESISTOR = 12000.0; //10000.0;
 // =============================================================================
+
+
+// --- Настройки ---
+const float RESISTOR_OHMS = 150.6; // Сопротивление нашего резистора в Омах
+
+// Характеристики датчика 4-20 мА
+const float CURRENT_MIN_MA = 3.95;//4.0;
+const float CURRENT_MAX_MA = 20.0;
+
+// Диапазон измерения твоего датчика (например, 0-5 метров)
+const float SENSOR_LEVEL_MIN_METERS = 0.0;
+const float SENSOR_LEVEL_MAX_METERS = 10.0; // Укажи максимальную глубину для твоей модели
 
 
 // это число умножить на 2 часа - интервал между передачей на сервер данных
