@@ -4,33 +4,23 @@
 #include "water_lvl_types.h"
 
 
+
 void indicateWakeUp() {
   int i = 0;
-  while (i++ < 5) {
-    digitalWrite(LED_PIN, HIGH);
-    // pixels.setPixelColor(0, CL_WHITE);
-    // pixels.show();  
-    delay(700);
 
-    // pixels.setPixelColor(0, CL_OFF);
-    // pixels.show();      
+  while (i++ < 5) {
+    digitalWrite(LED_PIN, HIGH);  
+    delay(800);
     digitalWrite(LED_PIN, LOW);
     delay(200);
   }
-  // pixels.setPixelColor(0, CL_BLUE);
-  // pixels.show();
-  // delay(200);
-  // pixels.setPixelColor(0, CL_OFF);
-  // pixels.show();  
-  // delay(200);
+
   Serial.println("Device is waked up\n");
 }
 
 
 void indicationInProgress() {
   digitalWrite(LED_PIN, HIGH);
-  // pixels.setPixelColor(0, CL_BLUE);
-  // pixels.show();
   delay(1000);
 }
 
@@ -39,20 +29,12 @@ void indicationInProgress() {
 void indicationSuccess(int stage) {
   if (stage == 2) {
     int i = 0;
-    while (i++ < 10) {
+    while (i++ < 20) {
       digitalWrite(LED_PIN, HIGH);
       delay(100);
       digitalWrite(LED_PIN, LOW);
       delay(100);
-      // pixels.setPixelColor(0, CL_PURPLE);
-      // pixels.show();
-      // delay(200);
-
-      // pixels.setPixelColor(0, CL_GREEN);
-      // pixels.show();  
-      // delay(200);
     }
-    // pixels.setPixelColor(0, CL_OFF);
   }
   else {
     int i = 0;
@@ -62,8 +44,6 @@ void indicationSuccess(int stage) {
       digitalWrite(LED_PIN, LOW);
       delay(1000);
     }
-    // pixels.setPixelColor(0, CL_GREEN);
-    // pixels.show();  
     delay(4000);
   }
 }
@@ -71,8 +51,13 @@ void indicationSuccess(int stage) {
 
 
 void indicationFail() {
-  // pixels.setPixelColor(0, CL_RED);
-  // pixels.show();
+  int i = 0;
+  while (i++ < 3) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(3000);
+    digitalWrite(LED_PIN, LOW);
+    delay(500);
+  }
   delay(4000);
 }
 
@@ -80,9 +65,6 @@ void indicationFail() {
 
 
 void initPins() {
-  // pixels.begin();
-  // pixels.setBrightness(50);
-
   pinMode(MODEM_POWER_PIN, OUTPUT);
   digitalWrite(MODEM_POWER_PIN, LOW);
   delay(1000);
@@ -90,14 +72,12 @@ void initPins() {
   pinMode(DONE_PIN, OUTPUT);
   digitalWrite(DONE_PIN, LOW);
 
-
-  pinMode(RESET_MODEM_PIN, OUTPUT);
-  digitalWrite(RESET_MODEM_PIN, LOW);
-
+  // TODO: инициализировать неиспользуемые пины
   // for (int pin : unusedPins) {
   //   pinMode(pin, INPUT_PULLDOWN);
   // }
 }
+
 
 
 void initI2CSensors() {

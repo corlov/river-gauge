@@ -16,7 +16,7 @@ const int receiver_server_port = 8001;
 // *********************************************
 // аппаратные настройки пинов
 // *********************************************
-//#define NEOPIXEL_PIN                    48
+#define NEOPIXEL_PIN                    48
 
 #define LED_PIN LED_BUILTIN
 
@@ -29,9 +29,11 @@ const int receiver_server_port = 8001;
 #define BATTERY_VOLTAGE_PIN             5
 
 #define WATER_TEMPERATURE_SENSOR_PIN    5
-#define RESET_MODEM_PIN 1
+//#define RESET_MODEM_PIN 14
 
 #define PRO_MICRO_ADDRESS 8 // Адрес нашего "Специалиста"
+
+
 
 // FIXME: скорректировать
 const int unusedPins[] = {0, 1, 2, 3, /*4, 5,*/ 6, 7, 8, 9, 10, 11,12,13,14,15,
@@ -60,6 +62,18 @@ extern int wl_measure_samples[SAMPLES_SIZE];
 const float VOLTAGE_DIVIDER_UP_RESISTOR = 40000.0; //33000 был но входное может быть больше лучше перестраховаться
 const float VOLTAGE_DIVIDER_DOWN_RESISTOR = 12000.0; //10000.0;
 // =============================================================================
+
+
+// --- Настройки ---
+const float RESISTOR_OHMS = 150.6; // Сопротивление нашего резистора в Омах
+
+// Характеристики датчика 4-20 мА
+const float CURRENT_MIN_MA = 3.95;//4.0;
+const float CURRENT_MAX_MA = 20.0;
+
+// Диапазон измерения твоего датчика (например, 0-5 метров)
+const float SENSOR_LEVEL_MIN_METERS = 0.0;
+const float SENSOR_LEVEL_MAX_METERS = 10.0; // Укажи максимальную глубину для твоей модели
 
 
 // это число умножить на 2 часа - интервал между передачей на сервер данных

@@ -11,19 +11,24 @@
 int wl_measure_samples[SAMPLES_SIZE];
 
 RTC_DS3231 rtc;
+
 Adafruit_BME280 bme;
 
 HardwareSerial SerialGSM(1);
+
 TinyGsm modem(SerialGSM);
+
 TinyGsmClient client(modem);
 
 OneWire oneWire(WATER_TEMPERATURE_SENSOR_PIN);
-DallasTemperature sensors(&oneWire);
 
-//Adafruit_NeoPixel pixels(1, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800, true);
+DallasTemperature sensors(&oneWire);
 
 Preferences preferences;
 
+Adafruit_ADS1115 ads;
+
+//#define DEBUG_MODE 0
 
 
 void setup() {
@@ -32,10 +37,21 @@ void setup() {
   
   digitalWrite(MODEM_POWER_PIN, HIGH);
 
+  delay(1000);
+
+  ads.begin();
+  // Усиление GAIN_TWO подходит для диапазона +/- 2.048V.
+  // Наш сигнал 0.4-2.0V идеально в него вписывается.
+  ads.setGain(GAIN_TWO);
+
+  #ifdef DEBUG_MODE
+    return;
+  #endif
+
+
   String defaultSensorsData = getAlwaysOnSensorsData();
-  String fullMessage = defaultSensorsData; //+ getPowerControlledSensorsData()
+  String fullMessage = defaultSensorsData + getPowerControlledSensorsData();
   Serial.println(fullMessage);
-  //delay(10000);
 
   if (attemptToSendLogs(fullMessage)) {
       Serial.println('[ok]');
@@ -44,16 +60,13 @@ void setup() {
     } else {
       Serial.println('[fail]');
       //setSuccess(false);
-      ///indicationFail();
-      indicationSuccess(0);
+      indicationFail();
+      
     }
 
   digitalWrite(MODEM_POWER_PIN, LOW);
   delay(2000);
   powerOff();
-
-
-
 
 
   // if (0) {
@@ -108,28 +121,28 @@ void setup() {
 
 
 void loop() {
-  return;
-  
-  indicateWakeUp();
+  #ifdef DEBUG_MODE
+    indicateWakeUp();
 
-  String defaultSensorsData = getAlwaysOnSensorsData();
-  String fullMessage = defaultSensorsData; //+ getPowerControlledSensorsData()
-  Serial.println(fullMessage);
-  //delay(10000);
+    String defaultSensorsData = getAlwaysOnSensorsData();
+    String fullMessage = defaultSensorsData + getPowerControlledSensorsData();
+    Serial.println(fullMessage);
+    delay(5000);
 
-  if (attemptToSendLogs(fullMessage)) {
-      Serial.println('[ok]');
-      //setSuccess(true);
-      indicationSuccess(2);
-    } else {
-      Serial.println('[fail]');
-      //setSuccess(false);
-      ///indicationFail();
-      indicationSuccess(0);
-    }
+    // if (attemptToSendLogs(fullMessage)) {
+    //     Serial.println('[ok]');
+    //     //setSuccess(true);
+    //     indicationSuccess(2);
+    //   } else {
+    //     Serial.println('[fail]');
+    //     //setSuccess(false);
+    //     indicationFail();
+    //   }
 
-  delay(5000);
-
+    //delay(10000);
+  #else
+    return;
+  #endif
 
 
 

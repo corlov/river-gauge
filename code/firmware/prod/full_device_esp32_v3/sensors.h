@@ -15,3 +15,5 @@ float getActualWaterLevel();
 void powerOff();
 
 void printProMicroData();
+
+String getDateTime();

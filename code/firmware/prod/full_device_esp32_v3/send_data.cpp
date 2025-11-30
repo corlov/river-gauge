@@ -3,7 +3,7 @@
 #include "water_lvl_settings.h"
 #include "storage.h"
 #include "LittleFS.h"
-
+#include "sensors.h"
 
 
 bool sendSms(const String& phoneNumber, const String& message) {
@@ -76,14 +76,18 @@ bool sendPayloadToServer(const String& payload) {
   if (client.connect(receiver_server_address, receiver_server_port, 15000L)) {
     Serial.println("Соединение с сервером установлено.");
 
+    String connection_dttm = getDateTime();
+    
+    int messageLength = payload.length() + connection_dttm.length() + 1;
+
     // Формируем и отправляем HTTP-запрос
     client.print(String("POST / HTTP/1.1\r\n"));
     client.print(String("Host: ") + receiver_server_address + "\r\n");
     client.print("Connection: close\r\n");
     client.print("Content-Type: text/csv\r\n");
-    client.print(String("Content-Length: ") + payload.length() + "\r\n");
+    client.print(String("Content-Length: ") + messageLength + "\r\n");
     client.print("\r\n");
-    client.print(payload);
+    client.print(payload + "," + connection_dttm);
 
     Serial.println("Пакет данных отправлен. Ожидание ответа от сервера...");
 
