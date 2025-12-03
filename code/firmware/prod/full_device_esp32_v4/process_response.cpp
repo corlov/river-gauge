@@ -10,20 +10,24 @@
  * @brief Парсит строку времени из формата YYYY-MM-DDTHH:MM:SS и обновляет RTC
  * @param timeString Строка времени от сервера.
  */
-void updateRtcFromServerTime(const char* timeString) {
+bool updateRtcFromServerTime(const char* timeString) {
   if (timeString == nullptr) {
     Serial.println("Время от сервера не получено.");
     indicationErrore(9);
-    return;
+    return false;
   }
 
   int year, month, day, hour, minute, second;
   if (sscanf(timeString, "%d-%d-%dT%d:%d:%d", &year, &month, &day, &hour, &minute, &second) == 6) {
     rtc.adjust(DateTime(year, month, day, hour, minute, second));
+    delay(1000);
   } else {
     indicationErrore(9);
     Serial.println("ОШИБКА: не удалось распарсить время от сервера.");
+    return false;
   }
+
+  return true;
 }
 
 
@@ -63,7 +67,5 @@ bool processServerResponse(const String& responseBody) {
   writeFloatSetting(SETTING_RESISTOR_OHMS, config["RESISTOR_OHMS"] | readFloatSetting(SETTING_RESISTOR_OHMS, DEFAULT_RESISTOR_OHMS));
   writeStringSetting(SETTING_PHONE, config["PHONE_NUMBER"] | readStringSetting(SETTING_PHONE, DEFAULT_PHONE_NUMBER));
 
-  updateRtcFromServerTime(config["current_server_time"]);
-
-  return true;
+  return updateRtcFromServerTime(config["current_server_time"]);
 }
