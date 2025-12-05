@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package iot.telemetry;
+
+option go_package = "./telemetry";
+
+message TelemetryData {
+  // --- Системные и временные метрики ---
+  uint32 boot_counter = 1;      			// Счетчик перезагрузок устройства
+  uint64 time_start = 2;        			// Время старта устройства (Unix Timestamp, секунды)
+  uint64 time_send = 3;         			// Время отправки данных (Unix Timestamp, секунды)
+
+  // --- Данные с основных сенсоров ---
+  float temperature_bme280 = 4;         	// Температура, датчик 1
+  float humidity = 5;             			// Влажность (humidity)
+  float pressure = 6;             			// Давление (pressure)
+  float temperature_rtc = 7;         		// Температура, датчик 2
+  float water_temperature = 8;          	// Температура воды
+  float water_level = 9;                	// Глубина
+  float u_battery = 10;               		// Напряжение АКБ
+  float load_current = 11;             		// Ток
+  float load_power = 12;               		// Мощность
+
+  // --- Идентификационная информация (метаданные) ---
+  uint64 dev_id = 13;           			// ID устройства
+  float gps_y = 14;             			// Координаты "широта"
+  float gps_x = 15;             			// Координаты "долгота"
+  uint64 time_mount = 16;       			// Дата установки
+  string ver = 17;              			// Версия прошивки
+
+  // --- Данные о связи и питании ---
+  int32 quality = 18;           			// Качество сигнала (может быть отрицательным, поэтому int32)
+  string operator = 19;         			// Название оператора связи
+  uint32 bat = 20;              			// Уровень заряда батареи в %
+  float u_modem = 21;           			// Напряжение на модеме
+  string imei = 22;             			// IMEI модема
+  uint64 operator_time = 23;    			// Время, полученное от оператора (Unix Timestamp)
+}
