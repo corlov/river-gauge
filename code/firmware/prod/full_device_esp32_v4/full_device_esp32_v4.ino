@@ -61,7 +61,6 @@ void setup() {
       indicationFail();
     }
 
-    digitalWrite(ERRORE_LED_PIN, LOW);
     modemOff();
   }
   else {

@@ -1,6 +1,7 @@
-#define VERSION "1.0.0"
+#define FIRMWARE_VERSION "1.0.0"
 #define INSTALL_DATE "01.12.2025"
-#define DEVICE_ID 7001
+#define SETTING_DEVICE_ID "device_id"
+#define DEFAULT_DEVICE_ID 7001
 #define GPS_LON 56.065226 
 #define GPS_LAT 36.234294
 
@@ -54,3 +55,24 @@ const int MAX_FAILS_SEND_COUNT = 5;
 
 #define SETTING_RESISTOR_OHMS "resistor" // сопротивление шунтирующего резистора в Омах около датчика уровня воды
 #define DEFAULT_RESISTOR_OHMS 150.6 // максимум 165 Ом, но не более!!!
+
+
+
+
+
+
+#define SETTING_TRANSPORT_TYPE "transport_type"
+#define TRANSPORT_HTTP 0
+#define TRANSPORT_MQTT 1
+
+#define SETTING_MQTT_HOST "mqtt_host"
+#define SETTING_MQTT_PORT "mqtt_port"
+#define SETTING_MQTT_USER "mqtt_user"
+#define SETTING_MQTT_PASS "mqtt_pass"
+
+#define DEFAULT_MQTT_HOST "89.169.3.241" 
+#define DEFAULT_MQTT_PORT 1883
+#define DEFAULT_MQTT_USER "device_user"
+#define DEFAULT_MQTT_PASS "sm191DY1oN5TDxMz"
+
+

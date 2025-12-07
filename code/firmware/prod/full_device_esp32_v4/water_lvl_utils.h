@@ -1,0 +1,1 @@
+String getNthValue(const String& data, int index);

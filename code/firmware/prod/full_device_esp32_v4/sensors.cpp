@@ -67,8 +67,8 @@ String getAlwaysOnSensorsData() {
     float temperatureFromRtcSensor = rtc.getTemperature();
     float waterTemperature = getWaterTemperature();
 
-    String data = getDateTime() + "," + getBmeData() + "," + String(temperatureFromRtcSensor,1) + "," + String(waterTemperature, 1) + "," + String(DEVICE_ID);
-    data += "," + String(GPS_LON, 7) + "," + String(GPS_LAT, 7) + "," + VERSION + "," + INSTALL_DATE;
+    String data = getDateTime() + "," + getBmeData() + "," + String(temperatureFromRtcSensor,1) + "," + String(waterTemperature, 1) + "," + String(DEFAULT_DEVICE_ID);
+    data += "," + String(GPS_LON, 7) + "," + String(GPS_LAT, 7) + "," + FIRMWARE_VERSION + "," + INSTALL_DATE;
 
     #ifdef DEBUG_MODE
       Serial.println("RTC t:  " + String(temperatureFromRtcSensor,1));

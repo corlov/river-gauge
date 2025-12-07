@@ -49,7 +49,7 @@ func main() {
 
         // Данные о связи
         Quality:      -85,
-        Operator:     "Beeline",
+        OperatorName:     "MegaFon",
         Bat:          98,
         UModem:       4.1,
         Imei:         "543210987654321",
