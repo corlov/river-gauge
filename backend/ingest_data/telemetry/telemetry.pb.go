@@ -45,7 +45,7 @@ type TelemetryData struct {
 	Ver       string  `protobuf:"bytes,17,opt,name=ver,proto3" json:"ver,omitempty"`                               // Версия прошивки
 	// --- Данные о связи и питании ---
 	Quality       int32   `protobuf:"varint,18,opt,name=quality,proto3" json:"quality,omitempty"`                               // Качество сигнала (может быть отрицательным, поэтому int32)
-	Operator      string  `protobuf:"bytes,19,opt,name=operator,proto3" json:"operator,omitempty"`                              // Название оператора связи
+	OperatorName  string  `protobuf:"bytes,19,opt,name=operator_name,json=operatorName,proto3" json:"operator_name,omitempty"`  // Название оператора связи
 	Bat           uint32  `protobuf:"varint,20,opt,name=bat,proto3" json:"bat,omitempty"`                                       // Уровень заряда батареи в %
 	UModem        float32 `protobuf:"fixed32,21,opt,name=u_modem,json=uModem,proto3" json:"u_modem,omitempty"`                  // Напряжение на модеме
 	Imei          string  `protobuf:"bytes,22,opt,name=imei,proto3" json:"imei,omitempty"`                                      // IMEI модема
@@ -210,9 +210,9 @@ func (x *TelemetryData) GetQuality() int32 {
 	return 0
 }
 
-func (x *TelemetryData) GetOperator() string {
+func (x *TelemetryData) GetOperatorName() string {
 	if x != nil {
-		return x.Operator
+		return x.OperatorName
 	}
 	return ""
 }
@@ -249,7 +249,7 @@ var File_telemetry_proto protoreflect.FileDescriptor
 
 const file_telemetry_proto_rawDesc = "" +
 	"\n" +
-	"\x0ftelemetry.proto\x12\riot.telemetry\"\xb7\x05\n" +
+	"\x0ftelemetry.proto\x12\riot.telemetry\"\xc0\x05\n" +
 	"\rTelemetryData\x12!\n" +
 	"\fboot_counter\x18\x01 \x01(\rR\vbootCounter\x12\x1d\n" +
 	"\n" +
@@ -273,8 +273,8 @@ const file_telemetry_proto_rawDesc = "" +
 	"\n" +
 	"time_mount\x18\x10 \x01(\x04R\ttimeMount\x12\x10\n" +
 	"\x03ver\x18\x11 \x01(\tR\x03ver\x12\x18\n" +
-	"\aquality\x18\x12 \x01(\x05R\aquality\x12\x1a\n" +
-	"\boperator\x18\x13 \x01(\tR\boperator\x12\x10\n" +
+	"\aquality\x18\x12 \x01(\x05R\aquality\x12#\n" +
+	"\roperator_name\x18\x13 \x01(\tR\foperatorName\x12\x10\n" +
 	"\x03bat\x18\x14 \x01(\rR\x03bat\x12\x17\n" +
 	"\au_modem\x18\x15 \x01(\x02R\x06uModem\x12\x12\n" +
 	"\x04imei\x18\x16 \x01(\tR\x04imei\x12#\n" +

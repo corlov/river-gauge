@@ -15,3 +15,8 @@
 5) sudo usermod -a -G dialout $USER
 6) sudo apt-get remove brltty
 
+
+
+### для работы с MQTT protobuf из ESP32
+nanopb
+python3 nanopb_generator.py telemetry.proto

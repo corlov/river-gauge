@@ -50,17 +50,20 @@ var messageHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Messa
         return
     }
 
-    log.Printf("Данные от устройства ID %d: Уровень воды %.2f м, АКБ %.2f В",
-    telemetryData.DevId, telemetryData.WaterLevel, telemetryData.UBattery)
-
+    log.Printf("Данные от устройства ID %d: Уровень воды %.2f м, АКБ %.2f В, Т.воды %.2f",
+    telemetryData.DevId, telemetryData.WaterLevel, telemetryData.UBattery, telemetryData.WaterTemperature)
     
+    //log.Printf("TimeSend: %d (%v)", telemetryData.TimeSend, time.Unix(int64(telemetryData.TimeSend), 0))
+    //log.Printf("TimeStart: %d (%v)", telemetryData.TimeStart, time.Unix(int64(telemetryData.TimeStart), 0))
+
+    correctedTimestamp := time.Unix(int64(telemetryData.TimeSend), 0).Add(-3 * time.Hour)    
 
     // Создаем новую "точку" данных для измерения "telemetry"
     p := influxdb2.NewPointWithMeasurement("telemetry").
         // Добавляем Теги (индексируемые метаданные)
         AddTag("device_id", fmt.Sprintf("%d", telemetryData.DevId)).
         AddTag("firmware_version", telemetryData.Ver).
-        AddTag("operator", telemetryData.Operator).
+        AddTag("operator_name", telemetryData.OperatorName).
         AddTag("imei", telemetryData.Imei).
 
         // Добавляем Поля (измеряемые значения)
@@ -81,7 +84,8 @@ var messageHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Messa
         AddField("boot_counter", telemetryData.BootCounter).
 
         // Устанавливаем время для этой точки данных. Берем его из сообщения.
-        SetTime(time.Unix(int64(telemetryData.TimeSend), 0))
+        //SetTime(time.Unix(int64(telemetryData.TimeSend), 0))        
+        SetTime(correctedTimestamp)
 
     // Асинхронно записываем точку. Клиент сам накапливает их и отправляет пачками.
     influxWriteAPI.WritePoint(p)
