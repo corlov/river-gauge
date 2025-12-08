@@ -6,21 +6,9 @@
 
 
 void indicateWakeUp() {
-
   digitalWrite(LED_PIN, HIGH);  
-  delay(1000);
+  delay(500);
   digitalWrite(LED_PIN, LOW);
-
-  // int i = 0;
-
-  // while (i++ < 5) {
-  //   digitalWrite(LED_PIN, HIGH);  
-  //   delay(800);
-  //   digitalWrite(LED_PIN, LOW);
-  //   delay(200);
-  // }
-
-  // Serial.println("Device is waked up\n");
 }
 
 
@@ -64,6 +52,20 @@ void indicationErrore(int erroreCode) {
 }
 
 
+void debugBlink(int arg_times, int arg_len1, int arg_len2) {
+  int i = 0;
+  while (i++ < arg_times) {
+    digitalWrite(DEBUG_LED_PIN, HIGH);
+    delay(arg_len1);
+    digitalWrite(DEBUG_LED_PIN, LOW);
+    delay(arg_len2);
+  }
+  delay(2000);
+}
+
+
+
+
 void indicationFail() {
   indicationErrore(ERR_CODE_SEND_ERROR);
   int i = 0;
@@ -90,6 +92,9 @@ void initPins() {
 
   pinMode(ERRORE_LED_PIN, OUTPUT);
   digitalWrite(ERRORE_LED_PIN, LOW);
+
+  pinMode(DEBUG_LED_PIN, OUTPUT);
+  digitalWrite(DEBUG_LED_PIN, LOW);
 
   for (int pin : unusedPins) {
     pinMode(pin, INPUT_PULLDOWN);

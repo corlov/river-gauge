@@ -28,6 +28,9 @@ Adafruit_ADS1115 ads;
 
 Adafruit_INA219 ina219;
 
+
+bool settingsReceived = false;
+
 //#define DEBUG_MODE 1
 
 
@@ -52,7 +55,7 @@ void setup() {
 
     String message = String(prevState.bootCount) + "," + getAlwaysOnSensorsData() + getPowerControlledSensorsData();
 
-    addCsvLine(message);
+    addCsvLine(message);    
 
     if (attemptToSend(message, prevState.failCounter)) {
       setSuccess(true);

@@ -11,6 +11,7 @@
 #include "pb_encode.h"
 #include "telemetry.pb.h"
 #include "water_lvl_utils.h"
+#include "water_lvl_init.h"
 
 
 PubSubClient mqttClient(client);
@@ -46,15 +47,18 @@ bool ensureGprsConnection() {
   
   if (!modem.restart()) {
     Serial.println("ОШИБКА: Не удалось перезагрузить модем!");
+    debugBlink(2, 500, 500);
     return false;
   }
 
-  if (!modem.waitForNetwork(30000L)) { // Увеличим таймаут ожидания сети до 30 сек
+  if (!modem.waitForNetwork(GSM_WAIT_TIMEOUT)) { // Увеличим таймаут ожидания сети до 70 сек
+    debugBlink(3, 500, 500);
     Serial.println(" ОШИБКА: сеть не найдена.");
     return false;
   }
 
   if (!modem.gprsConnect(apn, gprs_user, gprs_pass)) {
+    debugBlink(4, 500, 500);
     Serial.println(" ОШИБКА: не удалось подключиться.");
     return false;
   }
@@ -102,6 +106,7 @@ String gatherChannelInfo() {
 bool sendHttpRequest(const char* server, uint16_t port, const String& message) {
   if (!client.connect(server, port, 15000L)) {
     Serial.println("ОШИБКА: Не удалось подключиться к серверу.");
+    debugBlink(5, 500, 500);
     return false;
   }
 
@@ -141,7 +146,9 @@ bool sendHttpRequest(const char* server, uint16_t port, const String& message) {
   }
   client.stop();
  
-  return processServerResponse(response_body);
+  // FIXME: как отладишь часть с MQTT выпилить отсюда
+  //return processServerResponse(response_body);
+  return true;
 }
 
 
@@ -159,9 +166,12 @@ bool sendPayloadWithFallback(const String& payloadLog, const String& payload) {
     return false;
   }
 
-  if (!ensureGprsConnection()) {
-    return false;
-  }
+  // if (!ensureGprsConnection()) {
+  //   return false;
+  // }
+
+  debugBlink(5, 100, 100);
+     
 
   String channelInfo = gatherChannelInfo();
   String connection_dttm = "," + getDateTime();
@@ -234,25 +244,55 @@ void modemOff() {
 
 
 
-
-
 /**
- * @brief Возвращает текущее время в формате Unix Timestamp (секунды с 1970 г).
- * @return Текущий Unix Timestamp, или 0 если время не синхронизировано.
+ * @brief Подключается к MQTT, чтобы получить сохраненное сообщение с настройками.
+ * @return true, если настройки были получены и обработаны.
  */
-uint64_t getUnixTime() {
-  // if (!time_synced) {
-  //   // Если время еще не синхронизировано, можно попробовать сделать это сейчас
-  //   syncTimeWithNetwork();
-  // }
+bool fetchMqttSettings() {
+  String host = readStringSetting(SETTING_MQTT_HOST, DEFAULT_MQTT_HOST);
+  int port = readIntSetting(SETTING_MQTT_PORT, DEFAULT_MQTT_PORT);
+  String user = readStringSetting(SETTING_MQTT_USER, DEFAULT_MQTT_USER);
+  String pass = readStringSetting(SETTING_MQTT_PASS, DEFAULT_MQTT_PASS);
+  int devId = DEFAULT_DEVICE_ID;
 
-  // time_t now;
-  // time(&now);
-  //return (uint64_t)now;
+  // Сбрасываем флаг перед каждой попыткой
+  settingsReceived = false;
 
-  return 0;
+  // Устанавливаем сервер и нашу специальную callback-функцию
+  mqttClient.setServer(host.c_str(), port);
+  mqttClient.setCallback(settingsCallback);
+
+  String clientId = "device-fetch-" + String(devId) + "-" + String(random(0xffff), HEX);
+  if (!mqttClient.connect(clientId.c_str(), user.c_str(), pass.c_str())) {
+    Serial.println("ОШИБКА: Не удалось подключиться для получения настроек.");
+    return false;
+  }
+
+  String settingsTopic = "devices/config/" + String(devId);
+  Serial.print("Подписались на топик настроек: ");
+  Serial.println(settingsTopic);
+  mqttClient.subscribe(settingsTopic.c_str());
+
+  // --- КЛЮЧЕВАЯ ЛОГИКА: ЖДЕМ ОТВЕТА КОРОТКОЕ ВРЕМЯ ---
+  Serial.println("Ждем ответа с настройками (таймаут 5 секунд)...");
+  unsigned long startTime = millis();
+  while (!settingsReceived && millis() - startTime < 5000) {
+    // В этом цикле мы активно "слушаем" эфир
+    mqttClient.loop();
+    delay(10); // Небольшая пауза, чтобы не загружать процессор
+  }
+
+  // Отключаемся в любом случае
+  mqttClient.disconnect();
+
+  if (settingsReceived) {
+    Serial.println("Получение настроек завершено успешно.");
+  } else {
+    Serial.println("Таймаут. Новых настроек нет.");
+  }
+
+  return settingsReceived;
 }
-
 
 
 
@@ -322,72 +362,6 @@ void parseCsvAndFillProtobuf(const String& csv, iot_telemetry_TelemetryData* mes
   //TODO: дописать по остальным параметрам как их получить
 }
 
-
-// /**
-//  * @brief Собирает все данные и упаковывает их в бинарный Protobuf-пакет.
-//  * @param buffer Буфер для записи бинарных данных.
-//  * @param buffer_size Размер буфера.
-//  * @return Количество байт, записанных в буфер, или 0 в случае ошибки.
-//  */
-// size_t prepareProtobufPayload(uint8_t* buffer, size_t buffer_size) {
-//   // 1. Создаем структуру сообщения
-//   iot_telemetry_TelemetryData message = iot_telemetry_TelemetryData_init_zero;
-
-//   // 2. Создаем поток для записи в наш буфер
-//   pb_ostream_t stream = pb_ostream_from_buffer(buffer, buffer_size);
-
-//   // 3. Заполняем поля сообщения данными с сенсоров и системы
-//   // (Здесь нужно вызывать ваши функции для получения данных)
-
-//   // Системные и временные метрики
-//   message.boot_counter = 5;//FIXME bootCount; // Предполагается, что у вас есть такая переменная
-//   message.time_start = 0; // TODO: Добавить время старта
-//   message.time_send = getUnixTime(); // TODO: Нужна функция для получения Unix time
-
-//   // Данные с основных сенсоров
-//   message.temperature_bme280 = 36.6;//lastBME280Temp;
-//   message.humidity = 1.0;//lastBME280Humidity;
-//   message.pressure = 1.0;//lastBME280Pressure;
-//   message.temperature_rtc = 1.0;//getRtcTemperature();
-//   message.water_temperature = 1.0;//getWaterTemperature();
-//   message.water_level = 1.0;//getWaterLevel();
-//   message.u_battery = 1.0;//getBatteryVoltage();
-//   message.load_current = 0; // TODO: Добавить
-//   message.load_power = 0;   // TODO: Добавить
-
-//   // Идентификационная информация
-//   message.dev_id = 7001;
-//   message.gps_y = 0; // TODO: Добавить
-//   message.gps_x = 0; // TODO: Добавить
-//   message.time_mount = 0; // TODO: Добавить
-//   strncpy(message.ver, FIRMWARE_VERSION, sizeof(message.ver));
-
-//   // Данные о связи и питании
-//   message.quality = 27;//modem.getSignalQuality();
-//   strncpy(message.operator_name, modem.getOperator().c_str(), sizeof(message.operator_name));
-//   message.bat = modem.getBattPercent();
-//   message.u_modem = modem.getBattVoltage() / 1000.0f; // Конвертируем из мВ в В
-//   strncpy(message.imei, modem.getIMEI().c_str(), sizeof(message.imei));
-
-//   int year, month, day, hour, min, sec;
-//   float timezone;
-//   if (modem.getNetworkTime(&year, &month, &day, &hour, &min, &sec, &timezone)) {
-//       // TODO: Конвертировать в Unix Timestamp и записать в message.operator_time
-//   }
-
-//   // 4. Кодируем (сериализуем) сообщение в бинарный формат
-//   bool status = pb_encode(&stream, iot_telemetry_TelemetryData_fields, &message);
-
-//   if (!status) {
-//     Serial.println("ОШИБКА: Не удалось закодировать Protobuf сообщение!");
-//     return 0;
-//   }
-
-//   Serial.print("Protobuf сообщение успешно создано, размер: ");
-//   Serial.println(stream.bytes_written);
-
-//   return stream.bytes_written;
-// }
 
 
 /**
@@ -490,6 +464,8 @@ bool sendMqttMessage(uint8_t* payload, unsigned int length) {
 
 
 
+
+
 /**
  * @brief Новая главная функция для отправки данных по MQTT.
  *        (НОВАЯ ВЕРСИЯ: принимает готовую CSV-строку)
@@ -509,7 +485,17 @@ bool attemptToSendMqtt(const String& csv_payload) {
     return false; // Ошибка при создании сообщения
   }
 
-  return sendMqttMessage(buffer, message_length);
+  debugBlink(2, 200, 200);
+
+  if (sendMqttMessage(buffer, message_length)) {
+
+    debugBlink(3, 200, 200);
+
+    fetchMqttSettings();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
@@ -536,8 +522,13 @@ bool attemptToSend(String messageText, uint32_t failCounter) {
   //   wasSent = sendPayloadWithFallback(payloadToSend, messageText);
   // }
 
+  // TODO: по МКТТ не отправляется история накопленная если она есть
+
   // пока двумя способами пробуем отправить
+
+
   attemptToSendMqtt(messageText);
+
   String payloadToSend = prepareLogPayload();
   wasSent = sendPayloadWithFallback(payloadToSend, messageText);
 

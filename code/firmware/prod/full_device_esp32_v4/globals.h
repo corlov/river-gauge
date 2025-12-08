@@ -34,4 +34,6 @@ extern Adafruit_ADS1115 ads;
 
 extern Adafruit_INA219 ina219;
 
+extern bool settingsReceived;
+
 #endif

@@ -21,12 +21,13 @@ const uint16_t secondary_server_port = 8001;
 #define DONE_PIN                        4
 #define WATER_TEMPERATURE_SENSOR_PIN    5
 #define ERRORE_LED_PIN                  6
+#define DEBUG_LED_PIN                   7
 #define MODEM_POWER_PIN                 12
 #define WATER_LEVEL_SENSOR_PIN          14
 #define MODEM_RX_PIN                    15
 #define MODEM_TX_PIN                    16
 
-const int unusedPins[] = {0,1,2,3,/*4, 5, 6,*/ 7,8,9,10,11,/*12,*/13,/*14,15,16,*/
+const int unusedPins[] = {0,1,2,3,/*4, 5, 6, 7, */ 8,9,10,11,/*12,*/13,/*14,15,16,*/
                 17,18,19,20,21, 35,40,41,42,/*43,44,*/45,46,47/*,48*/};
 
 // Характеристики датчика уровня 4-20 мА после калибровки
@@ -74,5 +75,11 @@ const int MAX_FAILS_SEND_COUNT = 5;
 #define DEFAULT_MQTT_PORT 1883
 #define DEFAULT_MQTT_USER "device_user"
 #define DEFAULT_MQTT_PASS "sm191DY1oN5TDxMz"
+
+
+// TODO: резервный адрес отправки по MQTT
+
+
+#define GSM_WAIT_TIMEOUT 70000L
 
 
