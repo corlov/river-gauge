@@ -70,7 +70,7 @@ void setup() {
     modemOff();
   }
   else {
-    addCsvLine(String(prevState.bootCount) + "," + getAlwaysOnSensorsData());
+    addCsvLine(String(prevState.bootCount) + "," + getAlwaysOnSensorsData() + getPowerControlledSensorsDataDump());
     indicationSuccessWithoutSend();
   }
 

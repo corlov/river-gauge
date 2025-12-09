@@ -1,6 +1,7 @@
 #include "pb_encode.h"
 #include "telemetry.pb.h"
 #include <Arduino.h>
+#include <vector>
 
 
 
@@ -12,4 +13,4 @@ size_t prepareProtobufPayload(const String& csv_payload, uint8_t* buffer, size_t
 
 bool sendMqttMessage(uint8_t* payload, unsigned int length);
 
-bool attemptToSendMqtt(const String& csv_payload);
+bool attemptToSendMqtt(const String& csv_payload, const std::vector<String>& logLines);

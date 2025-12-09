@@ -1,6 +1,7 @@
 #include "water_lvl_types.h"
 #include "FS.h"
 #include "LittleFS.h"
+#include <vector>
 
 
 #define FLASH_STORAGE_NAME "device-storage"
@@ -30,5 +31,8 @@ void writeIntSetting(const char* key, int value);
 float readFloatSetting(const char* key, float defaultValue);
 
 void writeFloatSetting(const char* key, float value);
+
+
+std::vector<String> prepareLogPayloadAsArray();
 
 

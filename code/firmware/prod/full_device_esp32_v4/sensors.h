@@ -1,5 +1,6 @@
 #include "globals.h"
 
+
 String getBmeData();
 
 String getAlwaysOnSensorsData();
@@ -15,5 +16,7 @@ void powerOff();
 String getDateTime();
 
 String getPowerData();
+
+String getPowerControlledSensorsDataDump();
 
 

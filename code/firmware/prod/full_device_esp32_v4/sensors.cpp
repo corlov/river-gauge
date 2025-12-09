@@ -49,11 +49,34 @@ void powerOff() {
 
 
 String getDateTime() {
-  DateTime now = rtc.now();
-  char timestamp[20];
-  sprintf(timestamp, "%02d.%02d.%04d %02d:%02d:%02d", now.day(), now.month(), now.year(), now.hour(), now.minute(), now.second());
+    // DateTime now = rtc.now();
+    // char timestamp[24];
+    // snprintf(timestamp, sizeof(timestamp), "%02d.%02d.%04d %02d:%02d:%02d", now.day(), now.month(), now.year(), now.hour(), now.minute(), now.second());
+    // return String(timestamp);
 
-  return String(timestamp);
+
+    DateTime now = rtc.now();
+    String timestamp = "";    
+    timestamp.reserve(20);
+
+    if (now.day() < 10) timestamp += "0";
+    timestamp += now.day();
+    timestamp += ".";
+    if (now.month() < 10) timestamp += "0";
+    timestamp += now.month();
+    timestamp += ".";
+    timestamp += now.year();
+    timestamp += " ";
+    if (now.hour() < 10) timestamp += "0";
+    timestamp += now.hour();
+    timestamp += ":";
+    if (now.minute() < 10) timestamp += "0";
+    timestamp += now.minute();
+    timestamp += ":";
+    if (now.second() < 10) timestamp += "0";
+    timestamp += now.second();
+
+    return timestamp;
 }
 
 
@@ -80,6 +103,20 @@ String getPowerControlledSensorsData() {
     return data;
 }
 
+
+String getPowerControlledSensorsDataDump() {
+    float waterLevel = 0.0;
+    float bus_voltage = 0.0;
+    float current_mA = 0.0;
+    float power_mW = 0.0;
+
+    String data = "," + String(waterLevel, 3) + ",";
+    data += String(bus_voltage, 2) + ",";
+    data += String(current_mA, 2) + ",";
+    data += String(power_mW, 2);
+
+    return data;
+}
 
 
 

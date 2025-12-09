@@ -1,14 +1,16 @@
+#include <time.h> 
+#include <PubSubClient.h>
 #include "broker.h"
 #include "globals.h"
 #include "water_lvl_settings.h"
+#include "water_lvl_types.h"
 #include "sensors.h"
 #include "process_response.h"
-#include <time.h> 
-#include <PubSubClient.h>
 #include "water_lvl_utils.h"
 #include "water_lvl_init.h"
 #include "storage.h"
 #include "errors.h"
+
 
 
 /**
@@ -16,37 +18,38 @@
  * @return true, если настройки были получены и обработаны.
  */
 bool fetchMqttSettings() {
-    String host = readStringSetting(SETTING_MQTT_HOST, DEFAULT_MQTT_HOST);
-    int port = readIntSetting(SETTING_MQTT_PORT, DEFAULT_MQTT_PORT);
-    String user = readStringSetting(SETTING_MQTT_USER, DEFAULT_MQTT_USER);
-    String pass = readStringSetting(SETTING_MQTT_PASS, DEFAULT_MQTT_PASS);
     int devId = DEFAULT_DEVICE_ID;
-
     settingsReceived = false;
 
     String clientId = "device-fetch-" + String(devId) + "-" + String(random(0xffff), HEX);
+    String settingsTopic = "devices/config/" + String(devId);
 
-    // TODO: предусмотреть подключение к резервному серверу
-    mqttClient.setServer(host.c_str(), port);
     mqttClient.setCallback(settingsCallback);
 
-    if (!mqttClient.connect(clientId.c_str(), user.c_str(), pass.c_str())) {
-        blinkErrorCode(ERR_MQTT_CONNECT);
-        Serial.println("ОШИБКА: Не удалось подключиться для получения настроек.");
-        return false;
+    for (const auto& config : serverConfigs) {
+
+        mqttClient.setServer(config.host, config.port);
+
+        if (mqttClient.connect(clientId.c_str(), config.user, config.pass)) {
+            mqttClient.subscribe(settingsTopic.c_str());
+
+            unsigned long startTime = millis();
+            while (!settingsReceived && millis() - startTime < WAITING_SETTINGS_REQ_TIMEOUT) {
+                mqttClient.loop();
+                delay(20);
+            }
+
+            mqttClient.disconnect();
+            debugBlink(3, 800, 200);
+            return settingsReceived;
+        } else {
+            Serial.println("Не удалось подключиться. Пробую следующий сервер...");
+        }
     }
 
-    String settingsTopic = "devices/config/" + String(devId);
-    mqttClient.subscribe(settingsTopic.c_str());
-
-    unsigned long startTime = millis();
-    while (!settingsReceived && millis() - startTime < WAITING_SETTINGS_REQ_TIMEOUT) {
-        mqttClient.loop();
-        delay(20);
-    }
-
-    mqttClient.disconnect();
-    return settingsReceived;
+    blinkErrorCode(ERR_MQTT_CONNECT);
+    Serial.println("ОШИБКА: Не удалось подключиться ни к одному из доступных MQTT серверов.");
+    return false;
 }
 
 
@@ -137,41 +140,44 @@ size_t prepareProtobufPayload(const String& csv_payload, uint8_t* buffer, size_t
 
 
 
+
 /**
- * @brief Отправляет бинарное сообщение на MQTT-брокер.
+ * Отправляет одно бинарное сообщение по MQTT.
+ * Перебирает все серверы из глобального массива serverConfigs.
+ * Для первого сервера (основного) настройки будут загружены из памяти.
  * @param payload Указатель на буфер с данными.
  * @param length Длина данных в буфере.
- * @return true в случае успеха, иначе false.
+ * @return true в случае успешной отправки, иначе false.
  */
 bool sendMqttMessage(uint8_t* payload, unsigned int length) {
-    String host = readStringSetting(SETTING_MQTT_HOST, DEFAULT_MQTT_HOST);
-    int port = readIntSetting(SETTING_MQTT_PORT, DEFAULT_MQTT_PORT);
-    String user = readStringSetting(SETTING_MQTT_USER, DEFAULT_MQTT_USER);
-    String pass = readStringSetting(SETTING_MQTT_PASS, DEFAULT_MQTT_PASS);
     int devId = readIntSetting(SETTING_DEVICE_ID, DEFAULT_DEVICE_ID);
-
-    // TODO: подключение к резервному серверу
-    mqttClient.setServer(host.c_str(), port);
-
-    // Формируем уникальный ClientID и топик
     String clientId = "device-" + String(devId) + "-" + String(random(0xffff), HEX);
     String topic = "devices/telemetry/" + String(devId);
 
-    if (!mqttClient.connect(clientId.c_str(), user.c_str(), pass.c_str())) {
-        Serial.print("ОШИБКА MQTT: не удалось подключиться, код: ");
-        Serial.println(mqttClient.state());
-        blinkErrorCode(ERR_MQTT_CONNECT_2);
-        return false;
+    const size_t numServers = sizeof(serverConfigs) / sizeof(serverConfigs[0]);
+    for (size_t i = 0; i < numServers; ++i) {
+        String host = serverConfigs[i].host;
+        int port = serverConfigs[i].port;
+        String user = serverConfigs[i].user;
+        String pass = serverConfigs[i].pass;
+
+        mqttClient.setServer(host.c_str(), port);
+
+        if (mqttClient.connect(clientId.c_str(), user.c_str(), pass.c_str())) {
+            if (mqttClient.publish(topic.c_str(), payload, length)) {
+                mqttClient.disconnect();
+                return true;
+            } else {
+                blinkErrorCode(ERR_PUBLISH_MSG);
+                Serial.println("ОШИБКА: Не удалось опубликовать сообщение.");
+                mqttClient.disconnect();
+                return false; // Ошибка публикации, нет смысла пробовать другие серверы.
+            }
+        }
     }
 
-    if (mqttClient.publish(topic.c_str(), payload, length)) {
-        mqttClient.disconnect();
-        return true;
-    } 
-
-    mqttClient.disconnect();
-    blinkErrorCode(ERR_PUBLISH_MSG);
-    Serial.println("ОШИБКА: Не удалось опубликовать сообщение.");
+    blinkErrorCode(ERR_MQTT_CONNECT_2);
+    Serial.println("ОШИБКА: Не удалось подключиться ни к одному из серверов для отправки данных.");
     return false;
 }
 
@@ -179,32 +185,57 @@ bool sendMqttMessage(uint8_t* payload, unsigned int length) {
 
 
 
-
-
 /**
- * @brief Новая главная функция для отправки данных по MQTT.
- *        (НОВАЯ ВЕРСИЯ: принимает готовую CSV-строку)
+ * @brief функция для отправки данных по MQTT.
  * @param csv_payload Готовая CSV-строка с данными сенсоров.
  * @return true, если данные были успешно отправлены.
  */
-bool attemptToSendMqtt(const String& csv_payload) {
+bool attemptToSendMqtt(const String& csv_payload, const std::vector<String>& logLines) {
     if (!ensureGprsConnection()) {
         return false;
     }
 
-    // TODO: здесь нужно сделать цикл по ЦСВ-файлу что лежит в ПЗУ и передать все накопленое что есть, первым передаем свежую строку, заетм все остальное
-    uint8_t buffer[iot_telemetry_TelemetryData_size];
-    size_t message_length = prepareProtobufPayload(csv_payload, buffer, sizeof(buffer));
+    { // Используем блок для ограничения области видимости buffer и message_length
+        uint8_t buffer[iot_telemetry_TelemetryData_size];
+        size_t message_length = prepareProtobufPayload(csv_payload, buffer, sizeof(buffer));
 
-    if (message_length == 0) {
-        return false;
+        if (message_length == 0) {
+            blinkErrorCode(ERR_PREPARE_PROTOBUF);
+            Serial.println("Ошибка: не удалось подготовить Protobuf payload для свежей строки.");
+            return false;
+        }
+
+        if (!sendMqttMessage(buffer, message_length)) {
+            blinkErrorCode(ERR_SEND_PROTOBUF);
+            Serial.println("Ошибка: не удалось отправить MQTT сообщение для свежей строки.");
+            return false;
+        }
+    }
+    debugBlink(8, 50, 50);
+
+    // Отправка накопленных строк из лога
+    for (const String& log_line : logLines) {
+        if (log_line.length() == 0) continue;
+
+        uint8_t buffer[iot_telemetry_TelemetryData_size];
+        size_t message_length = prepareProtobufPayload(log_line, buffer, sizeof(buffer));
+
+        if (message_length == 0) {
+            blinkErrorCode(ERR_PREPARE_PROTOBUF);
+            Serial.println("Ошибка: не удалось подготовить Protobuf payload для строки из лога. Отправка прервана.");
+            return false;
+        }
+
+        if (!sendMqttMessage(buffer, message_length)) {
+            blinkErrorCode(ERR_SEND_PROTOBUF);
+            Serial.println("Ошибка: не удалось отправить MQTT сообщение для строки из лога. Отправка прервана.");
+            return false;
+        }
+        delay(50);
+
+        debugBlink(8, 50, 50);
     }
 
-    if (sendMqttMessage(buffer, message_length)) {
-        return fetchMqttSettings();
-    } else {
-        return false;
-    }
-
-    //TODO: fetchMqttSettings(); - вынести из цикла и после всех отправок получить
+    return fetchMqttSettings();
 }
+

@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <water_lvl_types.h>
 
 #define MQTT_TRANSMIT_TYPE 1
 //#define HTTP_TRANSMIT_TYPE 2
@@ -64,14 +65,6 @@ const int MAX_FAILS_SEND_COUNT = 5;
 #define DEFAULT_RESISTOR_OHMS 150.6 // максимум 165 Ом, но не более!!!
 
 
-
-
-
-
-#define SETTING_TRANSPORT_TYPE "transport_type"
-#define TRANSPORT_HTTP 0
-#define TRANSPORT_MQTT 1
-
 #define SETTING_MQTT_HOST "mqtt_host"
 #define SETTING_MQTT_PORT "mqtt_port"
 #define SETTING_MQTT_USER "mqtt_user"
@@ -82,12 +75,18 @@ const int MAX_FAILS_SEND_COUNT = 5;
 #define DEFAULT_MQTT_USER "device_user"
 #define DEFAULT_MQTT_PASS "sm191DY1oN5TDxMz"
 
+#define SECONDARY_MQTT_HOST "89.169.3.241" 
+#define SECONDARY_MQTT_PORT 1883
+#define SECONDARY_MQTT_USER "device_user"
+#define SECONDARY_MQTT_PASS "sm191DY1oN5TDxMz"
 
-// TODO: резервный адрес отправки по MQTT
+const MqttConfig serverConfigs[] = {
+  {DEFAULT_MQTT_HOST, DEFAULT_MQTT_PORT, DEFAULT_MQTT_USER, DEFAULT_MQTT_PASS},
+  {SECONDARY_MQTT_HOST, SECONDARY_MQTT_PORT, SECONDARY_MQTT_USER, SECONDARY_MQTT_PASS}
+};
 
 
 #define GSM_WAIT_TIMEOUT 70000L
-
 
 const uint WAITING_SETTINGS_REQ_TIMEOUT = 5000;
 

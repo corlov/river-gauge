@@ -26,8 +26,8 @@ String gatherChannelInfo() {
   String formattedTime = "0000-00-00 00:00:00"; // Значение по умолчанию
 
   if (modem.getNetworkTime(&year, &month, &day, &hour, &min, &sec, &timezone)) {
-    char timeBuffer[20];
-    sprintf(timeBuffer, "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec);
+    char timeBuffer[32];
+    snprintf(timeBuffer, sizeof(timeBuffer), "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec);
     formattedTime = String(timeBuffer);
   }
 

@@ -110,18 +110,21 @@ bool ensureGprsConnection() {
     blinkErrorCode(ERR_MODEM_RESTART);
     return false;
   }
+  debugBlink(3, 50, 50);
 
   if (!modem.waitForNetwork(GSM_WAIT_TIMEOUT)) {
     blinkErrorCode(ERR_MODEM_NET_NOT_FOUND);
     Serial.println(" ОШИБКА: сеть не найдена.");
     return false;
   }
+  debugBlink(3, 50, 50);
 
   if (!modem.gprsConnect(apn, gprs_user, gprs_pass)) {
     blinkErrorCode(ERR_MODEM_GPRS_CONNECT);
     Serial.println(" ОШИБКА: не удалось подключиться.");
     return false;
   }
+  debugBlink(3, 50, 50);
 
   return true;
 }

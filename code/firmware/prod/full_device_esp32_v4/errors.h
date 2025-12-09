@@ -1,6 +1,7 @@
 const int ERR_WRITE_LOG_FILE         =   1;
 const int ERR_CODE_FS_CORRUPT        =   2;
-// 3
+const int ERR_PREPARE_PROTOBUF       =   3;
+
 const int ERR_CODE_RTC               =  11;
 const int ERR_CODE_BME               =  12;
 const int ERR_CODE_INA219            =  13;
@@ -25,12 +26,6 @@ const int ERR_PUBLISH_MSG            = 213;
 const int ERR_MQTT_CONNECT_2         = 221;
 const int ERR_HTTP_CONNECT           = 222;
 const int ERR_HTTP_EMPTY_PKG         = 223;
-// 231
-// 232
-// 233
-// 311
-// ...
-// 333
-
+const int ERR_SEND_PROTOBUF          = 231;
 
 void blinkErrorCode(int errorCode);

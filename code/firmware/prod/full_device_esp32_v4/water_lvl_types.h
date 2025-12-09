@@ -9,5 +9,14 @@ struct PrevState {
   uint32_t failCounter;
 };
 
+
+struct MqttConfig {
+  const char* host;
+  int port;
+  const char* user;
+  const char* pass;
+};
+
+
 #endif
   

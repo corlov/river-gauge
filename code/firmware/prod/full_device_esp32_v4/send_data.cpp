@@ -14,6 +14,7 @@
 #include "broker.h"
 #include "http.h"
 #include "errors.h"
+#include <vector>
 
 
 
@@ -58,21 +59,20 @@ bool attemptToSend(String messageText, uint32_t failCounter) {
     String payloadToSend = prepareLogPayload();
     wasSent = sendPayloadWithFallback(payloadToSend, messageText);
     debugBlink(2, 300, 300);
-    if (wasSent) {
-      LittleFS.remove(LOG_FILE_PATH);
-      return true;
-    }
   #endif 
 
 
   #ifdef MQTT_TRANSMIT_TYPE
     debugBlink(5, 300, 300);
-    wasSent = attemptToSendMqtt(messageText);
+    std::vector<String> logLines = prepareLogPayloadAsArray();
+    wasSent = attemptToSendMqtt(messageText, logLines);
     debugBlink(5, 300, 300);
-    if (wasSent) {
-      return true;
-    }
   #endif 
+
+  if (wasSent) {
+    LittleFS.remove(LOG_FILE_PATH);
+    return true;
+  }
 
 
   // пробуем смс отправить с самой важной информацией

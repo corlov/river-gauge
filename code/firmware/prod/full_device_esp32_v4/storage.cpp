@@ -1,10 +1,10 @@
 #include "storage.h"
 #include "globals.h"
-#include <vector>
 #include "water_lvl_settings.h"
 #include "water_lvl_types.h"
 #include "water_lvl_init.h"
 #include "errors.h"
+
 
 
 PrevState loadAndIncrementBootState() {
@@ -167,4 +167,66 @@ void writeFloatSetting(const char* key, float value) {
   preferences.begin(SETTINGS_NAMESPACE, false);
   preferences.putFloat(key, value);
   preferences.end();
+}
+
+
+
+
+
+
+/**
+ * Читает файл логов, берет до {N} ПОСЛЕДНИХ строк
+ * и возвращает их в виде массива строк.
+ * @return std::vector<String> Массив строк лога.
+ */
+std::vector<String> prepareLogPayloadAsArray() {
+  if (!LittleFS.exists(LOG_FILE_PATH)) {
+    // Если файла нет, возвращаем пустой массив
+    return {};
+  }
+
+  File file = LittleFS.open(LOG_FILE_PATH, "r");
+  if (!file) {
+    blinkErrorCode(ERR_OPEN_LOG);
+    Serial.println("Не удалось открыть лог-файл для чтения.");
+    // В случае ошибки также возвращаем пустой массив
+    return {};
+  }
+
+  // Читаем все строки из файла в вектор.
+  std::vector<String> allLines;
+  while (file.available()) {
+    String line = file.readStringUntil('\n');
+    line.trim();
+    if (line.length() > 0) {
+      allLines.push_back(line);
+    }
+  }
+  file.close();
+
+  // Если в файле не было строк (или они все пустые), выходим
+  if (allLines.empty()) {
+    return {};
+  }
+
+  // Определяем, сколько строк брать (не больше MAX_LINES_TO_SEND)
+  int numLinesToSend = allLines.size();
+  if (numLinesToSend > MAX_LINES_TO_SEND) {
+    numLinesToSend = MAX_LINES_TO_SEND;
+  }
+
+  // Находим индекс первой строки, которую нужно отправить
+  int startIndex = allLines.size() - numLinesToSend;
+
+  // Создаем новый вектор для результата
+  std::vector<String> resultLines;
+
+  // Копируем нужные строки в результирующий вектор.
+  // Как и в оригинале, последнюю строку (allLines.size() - 1) не берем.
+  int endIndex = allLines.size() - 1;
+  for (int i = startIndex; i < endIndex; i++) {
+    resultLines.push_back(allLines[i]);
+  }
+
+  return resultLines;
 }
