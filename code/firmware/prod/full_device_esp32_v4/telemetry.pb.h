@@ -27,8 +27,8 @@ typedef struct _iot_telemetry_TelemetryData {
     float load_power; /* Мощность */
     /* --- Идентификационная информация (метаданные) --- */
     uint64_t dev_id; /* ID устройства */
-    float gps_y; /* Координаты "широта" */
-    float gps_x; /* Координаты "долгота" */
+    double gps_y; /* Координаты "широта" */
+    double gps_x; /* Координаты "долгота" */
     uint64_t time_mount; /* Дата установки */
     char ver[32]; /* Версия прошивки */
     /* --- Данные о связи и питании --- */
@@ -89,8 +89,8 @@ X(a, STATIC,   SINGULAR, FLOAT,    u_battery,        10) \
 X(a, STATIC,   SINGULAR, FLOAT,    load_current,     11) \
 X(a, STATIC,   SINGULAR, FLOAT,    load_power,       12) \
 X(a, STATIC,   SINGULAR, UINT64,   dev_id,           13) \
-X(a, STATIC,   SINGULAR, FLOAT,    gps_y,            14) \
-X(a, STATIC,   SINGULAR, FLOAT,    gps_x,            15) \
+X(a, STATIC,   SINGULAR, DOUBLE,   gps_y,            14) \
+X(a, STATIC,   SINGULAR, DOUBLE,   gps_x,            15) \
 X(a, STATIC,   SINGULAR, UINT64,   time_mount,       16) \
 X(a, STATIC,   SINGULAR, STRING,   ver,              17) \
 X(a, STATIC,   SINGULAR, INT32,    quality,          18) \
@@ -109,7 +109,7 @@ extern const pb_msgdesc_t iot_telemetry_TelemetryData_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define IOT_TELEMETRY_TELEMETRY_PB_H_MAX_SIZE    iot_telemetry_TelemetryData_size
-#define iot_telemetry_TelemetryData_size         245
+#define iot_telemetry_TelemetryData_size         253
 
 #ifdef __cplusplus
 } /* extern "C" */

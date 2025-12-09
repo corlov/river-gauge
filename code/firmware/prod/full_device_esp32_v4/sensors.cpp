@@ -1,8 +1,9 @@
-#import "sensors.h"
-#import "water_lvl_settings.h"
-#import "water_lvl_types.h"
-#import "water_lvl_init.h"
-#import "storage.h"
+#include "sensors.h"
+#include "water_lvl_settings.h"
+#include "water_lvl_types.h"
+#include "water_lvl_init.h"
+#include "storage.h"
+#include "errors.h"
 
 
 String getBmeData() {
@@ -14,12 +15,6 @@ String getBmeData() {
   data += String(temperature, 1) + ",";
   data += String(humidity, 1) + ",";
   data += String(pressure, 1);
-
-  #ifdef DEBUG_MODE
-    Serial.println("bme t:  " + String(temperature,1));
-    Serial.println("bme hum : " + String(humidity,1));
-    Serial.println("bme Pres: " + String(pressure,1));
-  #endif
 
   return data;
 }
@@ -69,11 +64,6 @@ String getAlwaysOnSensorsData() {
 
     String data = getDateTime() + "," + getBmeData() + "," + String(temperatureFromRtcSensor,1) + "," + String(waterTemperature, 1) + "," + String(DEFAULT_DEVICE_ID);
     data += "," + String(GPS_LON, 7) + "," + String(GPS_LAT, 7) + "," + FIRMWARE_VERSION + "," + INSTALL_DATE;
-
-    #ifdef DEBUG_MODE
-      Serial.println("RTC t:  " + String(temperatureFromRtcSensor,1));
-      Serial.println("Water t : " + String(waterTemperature,1));
-    #endif
 
     return data;
 }
@@ -148,7 +138,7 @@ float getActualWaterLevel() {
 
   if (waterLevel < 0) {
     Serial.println("E5: water level sensor error");
-    indicationErrore(ERR_CODE_WATER_LEVEL_ERROR);
+    blinkErrorCode(ERR_CODE_WATER_LEVEL_ERROR);
     return -1024;
   } 
   return waterLevel;
@@ -165,7 +155,7 @@ float getWaterTemperature() {
 
   if (tempC == DEVICE_DISCONNECTED_C) {
     Serial.println("E4: get water temperature error");
-    indicationErrore(ERR_CODE_WATER_TEMP);
+    blinkErrorCode(ERR_CODE_WATER_TEMP);
     return 65535;
   }
 

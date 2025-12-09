@@ -1,4 +1,4 @@
-#import "globals.h"
+#include "globals.h"
 
 String getBmeData();
 

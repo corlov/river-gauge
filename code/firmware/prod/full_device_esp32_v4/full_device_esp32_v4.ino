@@ -28,10 +28,13 @@ Adafruit_ADS1115 ads;
 
 Adafruit_INA219 ina219;
 
-
 bool settingsReceived = false;
 
+PubSubClient mqttClient(client);
+
 //#define DEBUG_MODE 1
+
+
 
 
 
@@ -47,15 +50,15 @@ void setup() {
   PrevState prevState = loadAndIncrementBootState();
   
 
-  bool needToRun = ((prevState.bootCount - 1) % readIntSetting(SETTING_ACTIVATION_FREQ, DEFAULT_MODEM_ACTIVATION_FREQENCY) == 0) || (!prevState.success);
-  if (needToRun) {
+  bool needToSend = ((prevState.bootCount - 1) % readIntSetting(SETTING_ACTIVATION_FREQ, DEFAULT_MODEM_ACTIVATION_FREQENCY) == 0) || (!prevState.success);
+  if (needToSend) {
     setSuccess(false);
 
     modemOn();
 
     String message = String(prevState.bootCount) + "," + getAlwaysOnSensorsData() + getPowerControlledSensorsData();
 
-    addCsvLine(message);    
+    addCsvLine(message);
 
     if (attemptToSend(message, prevState.failCounter)) {
       setSuccess(true);

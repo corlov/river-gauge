@@ -4,6 +4,7 @@
 #include "water_lvl_settings.h"
 #include "water_lvl_types.h"
 #include "water_lvl_init.h"
+#include "errors.h"
 
 
 PrevState loadAndIncrementBootState() {
@@ -54,25 +55,22 @@ void setSuccess(bool val) {
 void addCsvLine(const String& csvData) {
   if (!LittleFS.begin()) {
     if (LittleFS.format()) {
-      Serial.println("Файловая система успешно отформатирована!");
-      Serial.println("Пожалуйста, перезагрузите устройство (нажмите кнопку Reset).");
-      indicationErrore(ERR_CODE_FS_CORRUPT);
+      Serial.println("Файловая система успешно отформатирована! Пожалуйста, перезагрузите устройство (нажмите кнопку Reset).");
+      blinkErrorCode(ERR_CODE_FS_CORRUPT);
     }
     return;
   }
-  Serial.println("Файловая система успешно смонтирована.");
 
   File file = LittleFS.open(LOG_FILE_PATH, "a");
 
   if (!file) {
+    blinkErrorCode(ERR_OPEN_LOG_FILE_2);
     Serial.println("Не удалось открыть файл для дозаписи");
     return;
   }
 
-  if (file.println(csvData)) {
-    Serial.print("Строка добавлена в лог: ");
-    Serial.println(csvData);
-  } else {
+  if (!file.println(csvData)) {
+    blinkErrorCode(ERR_WRITE_LOG_FILE);
     Serial.println("Ошибка записи в файл.");
   }
 
@@ -89,6 +87,7 @@ String prepareLogPayload() {
 
   File file = LittleFS.open(LOG_FILE_PATH, "r");
   if (!file) {
+    blinkErrorCode(ERR_OPEN_LOG);
     Serial.println("Не удалось открыть лог-файл для чтения.");
     return "";
   }

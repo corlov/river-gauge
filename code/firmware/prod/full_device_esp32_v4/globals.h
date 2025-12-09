@@ -12,6 +12,7 @@
 #include <Preferences.h>
 #include <Adafruit_ADS1X15.h>
 #include <Adafruit_INA219.h>
+#include <PubSubClient.h>
 
 
 extern RTC_DS3231 rtc;
@@ -34,6 +35,9 @@ extern Adafruit_ADS1115 ads;
 
 extern Adafruit_INA219 ina219;
 
+// флаг что мы получили ответ от Брокера
 extern bool settingsReceived;
+
+extern PubSubClient mqttClient;
 
 #endif

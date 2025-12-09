@@ -1,9 +1,15 @@
+#include <Arduino.h>
+
+#define MQTT_TRANSMIT_TYPE 1
+//#define HTTP_TRANSMIT_TYPE 2
+
+
 #define FIRMWARE_VERSION "1.0.0"
 #define INSTALL_DATE "01.12.2025"
 #define SETTING_DEVICE_ID "device_id"
 #define DEFAULT_DEVICE_ID 7001
-#define GPS_LON 56.065226 
-#define GPS_LAT 36.234294
+#define GPS_LON 56.06522 
+#define GPS_LAT 36.23429
 
 const char apn[] = "internet";
 const char gprs_user[] = "";
@@ -83,3 +89,6 @@ const int MAX_FAILS_SEND_COUNT = 5;
 #define GSM_WAIT_TIMEOUT 70000L
 
 
+const uint WAITING_SETTINGS_REQ_TIMEOUT = 5000;
+
+#define JSON_BUFF_SIZE 512

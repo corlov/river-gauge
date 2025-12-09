@@ -2,6 +2,7 @@
 #include "water_lvl_init.h"
 #include "water_lvl_settings.h"
 #include "water_lvl_types.h"
+#include "errors.h"
 
 
 
@@ -37,21 +38,6 @@ void indicationSuccessWithoutSend() {
 }
 
 
-void indicationErrore(int erroreCode) {
-  int k = 0;
-  while (k++ < 3) {
-    int i = 0;
-    while (i++ < erroreCode) {
-      digitalWrite(ERRORE_LED_PIN, HIGH);
-      delay(500);
-      digitalWrite(ERRORE_LED_PIN, LOW);
-      delay(500);
-    }
-    delay(2000);
-  }
-}
-
-
 void debugBlink(int arg_times, int arg_len1, int arg_len2) {
   int i = 0;
   while (i++ < arg_times) {
@@ -67,7 +53,7 @@ void debugBlink(int arg_times, int arg_len1, int arg_len2) {
 
 
 void indicationFail() {
-  indicationErrore(ERR_CODE_SEND_ERROR);
+  blinkErrorCode(ERR_CODE_SEND_ERROR);
   int i = 0;
   while (i++ < 3) {
     digitalWrite(LED_PIN, HIGH);
@@ -106,17 +92,17 @@ void initPins() {
 void initI2CSensors() {
   if (!rtc.begin()) {
     Serial.println("E1: RTC DS3231 is not found!");
-    indicationErrore(ERR_CODE_RTC);
+    blinkErrorCode(ERR_CODE_RTC);
   }
 
   if (!bme.begin(0x76)) {
     Serial.println("E2: BME280 is not found!");
-    indicationErrore(ERR_CODE_BME);
+    blinkErrorCode(ERR_CODE_BME);
   }
 
   if (!ina219.begin()) {
     Serial.println("E3: INA219 is not found!");
-    indicationErrore(ERR_CODE_INA219);
+    blinkErrorCode(ERR_CODE_INA219);
   }
 
   // раскоментировать 1 раз если надо синхронизовать датчик со времененм на ПК
