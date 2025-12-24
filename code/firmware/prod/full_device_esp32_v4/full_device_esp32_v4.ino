@@ -46,6 +46,8 @@ void setup() {
   // #endif
 
   init();
+  delay(1000);
+  
 
   PrevState prevState = loadAndIncrementBootState();
   
@@ -55,6 +57,7 @@ void setup() {
     setSuccess(false);
 
     modemOn();
+    delay(2000);
 
     String message = String(prevState.bootCount) + "," + getAlwaysOnSensorsData() + getPowerControlledSensorsData();
 

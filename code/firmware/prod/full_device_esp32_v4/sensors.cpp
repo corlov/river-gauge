@@ -40,10 +40,18 @@ String getPowerData() {
 
 
 void powerOff() {
-    delay(1000);
-    digitalWrite(DONE_PIN, HIGH);
-    delay(200);
-    digitalWrite(DONE_PIN, LOW);
+    delay(100);
+
+    digitalWrite(LED_PIN, HIGH);
+
+    int k = 0;
+    while(k < 5) {
+      k++;
+      digitalWrite(DONE_PIN, HIGH);
+      delay(50);
+      digitalWrite(DONE_PIN, LOW);
+      delay(50);
+    }
 }
 
 
@@ -185,7 +193,7 @@ float getActualWaterLevel() {
 
 float getWaterTemperature() {
   sensors.begin();
-  delay(1000);
+  delay(100);
   sensors.requestTemperatures();
 
   float tempC = sensors.getTempCByIndex(0);

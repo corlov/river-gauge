@@ -20,7 +20,7 @@ PrevState loadAndIncrementBootState() {
 
     bool success = preferences.getBool("success", false);
 
-    uint32_t failCounter = preferences.getUInt("failCounter", 0);    
+    uint32_t failCounter = preferences.getUInt("failCounter", 0);
 
     preferences.end();
 

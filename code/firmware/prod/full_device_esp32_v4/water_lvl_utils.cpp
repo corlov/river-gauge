@@ -32,14 +32,14 @@ String getNthValue(const String& data, int index) {
 
 void modemOn() {
   digitalWrite(MODEM_POWER_PIN, HIGH);
-  delay(2000);
+  delay(1000);
 }
 
 
 
 void modemOff() {
   digitalWrite(MODEM_POWER_PIN, LOW);
-  delay(2000);
+  delay(1000);
 }
 
 

@@ -16,7 +16,7 @@ void indicateWakeUp() {
 
 void indicationSuccess() {
   int i = 0;
-  while (i++ < 20) {
+  while (i++ < 10) {
     digitalWrite(LED_PIN, HIGH);
     delay(100);
     
@@ -28,12 +28,12 @@ void indicationSuccess() {
 
 void indicationSuccessWithoutSend() {
   int i = 0;
-  while (i++ < 10) {
+  while (i++ < 3) {
     digitalWrite(LED_PIN, HIGH);
-    delay(500);
+    delay(800);
     
     digitalWrite(LED_PIN, LOW);
-    delay(500);
+    delay(100);
   }  
 }
 
@@ -61,7 +61,6 @@ void indicationFail() {
     digitalWrite(LED_PIN, LOW);
     delay(500);
   }
-  delay(4000);
 }
 
 
@@ -122,10 +121,10 @@ void initAds() {
 void init() {
   initPins();
   Serial.begin(115200);
+  Wire.begin();
 
   indicateWakeUp();
 
-  Wire.begin();
   initAds();
   initI2CSensors();
 }

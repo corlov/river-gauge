@@ -20,7 +20,6 @@ bool updateRtcFromServerTime(const char* timeString) {
   int year, month, day, hour, minute, second;
   if (sscanf(timeString, "%d-%d-%dT%d:%d:%d", &year, &month, &day, &hour, &minute, &second) == 6) {
     rtc.adjust(DateTime(year, month, day, hour, minute, second));
-    delay(1000);
   } else {
     blinkErrorCode(ERR_CODE_UPDATE_RTC_PARSE);
     Serial.println("ОШИБКА: не удалось распарсить время от сервера.");
