@@ -263,6 +263,9 @@ def get_latest_data():
     return html, 200
 
 
+@app.route('/version', methods=['GET'])
+def get_version():
+    return '1.0', 200
 
 
 
