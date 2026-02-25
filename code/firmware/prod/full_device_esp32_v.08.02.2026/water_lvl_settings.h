@@ -33,8 +33,10 @@ const uint16_t secondary_server_port = 8001;
 #define DEBUG_LED_PIN                   7
 #define MODEM_POWER_PIN                 12
 #define WATER_LEVEL_SENSOR_PIN          14
-#define MODEM_RX_PIN                    15 // 44 // 15
-#define MODEM_TX_PIN                    16 // 43 // 16
+// для прямого соединения д.б. 15, для крест-накрест 16
+#define MODEM_RX_PIN                    16 // 15
+// для прямого соединения д.б. 16, для крест-накрест 15
+#define MODEM_TX_PIN                    15 // 16
 
 const int unusedPins[] = {0,1,2,3,/*4, 5, 6, 7, */ 8,9,10,11,/*12,*/13,/*14,15,16,*/
                 17,18,/*19,20*/21, 35,40,41,42,/*43,44,*/45,46,47/*,48*/};

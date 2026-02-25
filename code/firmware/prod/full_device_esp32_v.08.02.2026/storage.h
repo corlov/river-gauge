@@ -36,3 +36,7 @@ void writeFloatSetting(const char* key, float value);
 std::vector<String> prepareLogPayloadAsArray();
 
 
+bool get_prev_start_ok();
+
+void set_prev_start_ok(bool val);
+

@@ -6,6 +6,23 @@
 #include "errors.h"
 
 
+bool get_prev_start_ok() {
+  if (preferences.begin(FLASH_STORAGE_NAME, false)) {
+    bool prev_ok = preferences.getBool("prev_ok", true);
+    preferences.end();
+    return prev_ok;
+  }
+  return true;
+}
+
+
+void set_prev_start_ok(bool val) {
+  if (preferences.begin(FLASH_STORAGE_NAME, false)) {
+    preferences.putBool("prev_ok", val);
+    preferences.end();
+  }
+}
+
 
 PrevState loadAndIncrementBootState() {
   PrevState result;

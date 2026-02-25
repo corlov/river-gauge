@@ -52,6 +52,7 @@ bool sendHttpRequest(const char* server, uint16_t port, const String& message) {
     return false;
   }
 
+  Serial.println("connected to server [ok]");
 
   // Формируем и отправляем HTTP-запрос
   client.print(String("POST / HTTP/1.1\r\n"));
@@ -86,6 +87,12 @@ bool sendHttpRequest(const char* server, uint16_t port, const String& message) {
       }
     }
   }
+  if (millis() - timeout > 15000L) {
+    Serial.println("connection timeout fail");
+  }
+  
+  Serial.println("response_body:");
+  Serial.println(response_body);
   client.stop();
  
   
@@ -111,15 +118,20 @@ bool sendPayloadWithFallback(const String& payloadLog, const String& payload) {
   if (!ensureGprsConnection()) {
     return false;
   }
+  Serial.println("GPRS [OK]");
 
   String channelInfo = gatherChannelInfo();
+  Serial.println(channelInfo);
   String connection_dttm = "," + getDateTime();
   //String fullMessage = payloadLog + payload + channelInfo + connection_dttm;
   String fullMessage = payload + channelInfo + connection_dttm;
 
+  
+
   if (sendHttpRequest(primary_server_address, primary_server_port, fullMessage)) {
     return true; 
   }
+
 
   if (sendHttpRequest(secondary_server_address, secondary_server_port, fullMessage)) {
     return true;

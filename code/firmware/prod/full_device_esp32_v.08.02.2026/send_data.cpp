@@ -60,7 +60,10 @@ bool attemptToSend(String messageText, uint32_t failCounter) {
     //String payloadToSend = prepareLogPayload();
     //wasSent = sendPayloadWithFallback(payloadToSend, messageText);
     String payloadToSend = messageText;
+
+    Serial.println("attemptToSend");
     wasSent = sendPayloadWithFallback(payloadToSend, messageText);
+    Serial.println("after attemptToSend");
     debugBlink(2, 300, 300);
   #endif 
 

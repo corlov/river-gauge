@@ -5,6 +5,20 @@
 #include "storage.h"
 #include "sensors.h"
 #include "send_data.h"
+#include <esp_task_wdt.h>
+
+// WDT_TIMEOUT секунд максимально евермя работы утсройства, иначе принудительно оно перезагрузится
+#define WDT_TIMEOUT 120
+
+#define CONFIG_FREERTOS_NUMBER_OF_CORES 1 
+
+// Fixes complier error “invalid conversion from ‘int’ to ‘const esp_task_wdt_config_t*'”:
+esp_task_wdt_config_t twdt_config = 
+    {
+        .timeout_ms = WDT_TIMEOUT * 1000,
+        .idle_core_mask = (1 << portNUM_PROCESSORS) - 1,    // Bitmask of cores
+        .trigger_panic = true,
+    };
 
 
 
@@ -39,6 +53,17 @@ PubSubClient mqttClient(client);
 
 
 void setup() {
+  esp_task_wdt_deinit();
+  esp_err_t err = esp_task_wdt_init(&twdt_config);
+  if (err != ESP_OK) {
+    
+  }
+  esp_task_wdt_add(NULL);
+  esp_task_wdt_reset();
+
+  
+
+  
   // #ifdef DEBUG_MODE
     // init();
     // modemOn();
@@ -47,6 +72,15 @@ void setup() {
 
   init();
   delay(5000);
+
+
+  // если предыдущий запуск ничем не закончился выключаем девайс
+  if (! get_prev_start_ok()) {
+    set_prev_start_ok(true);
+    powerOff();
+    return;
+  }
+  set_prev_start_ok(false);
   
 
   PrevState prevState = loadAndIncrementBootState();
@@ -78,7 +112,10 @@ void setup() {
     indicationSuccessWithoutSend();
   }
 
+  set_prev_start_ok(true);
   powerOff();
+
+  esp_task_wdt_reset();
 }
 
 
